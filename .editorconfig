@@ -1,0 +1,9 @@
+# EditorConfig helps maintain consistent coding styles across various editors and IDEs
+# More information at https://editorconfig.org
+
+root = true
+
+# Apply settings to all YAML files
+[*.{yml,yaml,py,json,html,css,js,ts,md,cjs,mjs,prettierrc,eslintrc,gitignore,prettierignore,eslintignore}]
+indent_style = space
+indent_size = 2%                                                 

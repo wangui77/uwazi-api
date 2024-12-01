@@ -1,0 +1,32 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Environment variables and credentials
+.env
+
+# Docker-specific files
+docker-compose.yml
+Dockerfile
+
+# Virtual environments
+venv/
+.venv/
+
+# Local development tools and cache
+.idea/
+.vscode/
+*.log
+*.sqlite3
+*.db
+node_modules/
+coverage/
+dist/
+build/
+*.egg-info/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
