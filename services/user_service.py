@@ -1,6 +1,7 @@
-from app.models.user import User
-from app.services.db_service import db
+from models.user import User
 from werkzeug.security import check_password_hash, generate_password_hash
+
+from services.db_service import db
 
 
 class UserService:
@@ -31,3 +32,6 @@ class UserService:
         except Exception as e:
             db.session.rollback()
             raise Exception(f"Failed to create user: {str(e)}")
+
+
+user_service = UserService()

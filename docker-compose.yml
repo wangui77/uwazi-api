@@ -6,38 +6,36 @@ services:
       - "443:443"
       - "80:80"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf  # Nginx configuration
-      - ./certs:/etc/nginx/certs:ro         # SSL certificates (read-only)
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf  # Nginx configuration
+      - ./config/nginx/certs:/etc/nginx/certs:ro         # SSL certificates (read-only)
     depends_on:
-      - uwazi-api
+      - api
 
-  uwazi-api:
+  api:
     build:
       context: .
-    container_name: uwazi-api
+    container_name: api
     env_file:
       - .env
     ports:
       - "${FLASK_PORT}:${FLASK_PORT}"
     volumes:
       - .:/app  # Mount current directory to container
-      - /app/venv  # Avoid overwriting virtual environment in Docker
+      # - /app/venv  # Avoid overwriting virtual environment in Docker
     depends_on:
-      - uwazi-db
+      - database
     command: >
-      sh -c "flask run --host=0.0.0.0 --port=${FLASK_PORT} --reload"
-        
-  uwazi-db:
+      sh -c "flask run --host=0.0.0.0 --port=${FLASK_PORT} --reload"\
+       
+  database:
     image: postgres:latest
-    container_name: uwazi-db
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+    container_name: database
+    env_file:
+      - .env
     ports:
-      - "5432:5432"  # Default PostgreSQL port
+      - "${POSTGRES_PORT}:5432"  # Default PostgreSQL port
     volumes:
-      - uwazi-db-data:/var/lib/postgresql/data  # Persistent storage for PostgreSQL data
+      - database-data:/var/lib/postgresql/data  # Persistent storage for PostgreSQL data
 
 volumes:
-  uwazi-db-data:
+  database-data:

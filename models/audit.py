@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from app.services.db_service import db
+from services.db_service import db
 
 
 class AuditTrail(db.Model):

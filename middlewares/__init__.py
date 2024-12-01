@@ -1,19 +1,33 @@
+import json
 from functools import wraps
 
 from flask import jsonify, request
+from services.jwt_service import jwt_service
 
-from app.services.jwt_service import jwt_service
 
-
-def authentication_middleware(app):
-    """
-    Middleware to enforce authentication globally except for specific routes.
-    """
+def middlewares(app):
     @app.before_request
-    def before_request():
+    def logging_middleware():
+        try:
+            # Make a copy of `request.__dict__` to avoid runtime modification issues
+            request_dict = {key: str(value)
+                            for key, value in dict(request.__dict__).items()}
+
+            # Pretty-print the serialized dictionary
+            print(json.dumps(request_dict, indent=4), flush=True)
+        except Exception as e:
+            print(f"Error while serializing request.__dict__: {e}", flush=True)
+
+    @app.before_request
+    def auth_check_middleware():
         # Skip middleware for specific public routes
-        public_endpoints = ["auth.login", "auth.register", "health"]
-        if request.endpoint in public_endpoints:
+        public_endpoints = [
+            "/auth/login",
+            "/auth/register",
+            "/health"
+        ]
+
+        if request.path in public_endpoints:
             return
 
         # Get the JWT from the Authorization header or cookie

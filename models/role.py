@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from app.services.db_service import db
+from services.db_service import db
 
 
 class Role(db.Model):
-    __tablename__ = "user_roles"
+    __tablename__ = "roles"
 
     id = db.Column(db.Integer, primary_key=True)
     role_code = db.Column(db.String(50), nullable=False)

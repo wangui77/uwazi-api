@@ -1,13 +1,12 @@
 from datetime import datetime
 
-from app.services.db_service import db
+from services.db_service import db
 
 
 class TreatmentCost(db.Model):
     __tablename__ = "treatment_costs"
 
-    id = db.Column(db.Integer, primary_key=True)
-    treatment_id = db.Column(db.Integer, db.ForeignKey("treatments.id"), nullable=False)  # Foreign key to Treatment
+    id = db.Column(db.Integer, primary_key=True)   
     hospital_category = db.Column(db.String(50), nullable=False)  # e.g., "public", "private"
 
     # Costs
@@ -27,3 +26,6 @@ class TreatmentCost(db.Model):
     # Status
     status_code = db.Column(db.String(50))
     status_description = db.Column(db.Text)
+
+    # Relationships
+    treatment_id = db.Column(db.Integer, db.ForeignKey("treatments.id"), nullable=False)  # Foreign key to Treatment
