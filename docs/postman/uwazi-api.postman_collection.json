@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "dc87750f-e3ec-405a-adc7-37b59005acf4",
+		"_postman_id": "70e21616-55cd-40bd-b644-e0bd94cb91ae",
 		"name": "uwazi-api",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "2225896",
-		"_collection_link": "https://solar-meadow-948171.postman.co/workspace/uwazi~92e66936-432e-4434-98ff-2b92238ad095/collection/2225896-dc87750f-e3ec-405a-adc7-37b59005acf4?action=share&source=collection_link&creator=2225896"
+		"_collection_link": "https://solar-meadow-948171.postman.co/workspace/uwazi~92e66936-432e-4434-98ff-2b92238ad095/collection/2225896-70e21616-55cd-40bd-b644-e0bd94cb91ae?action=share&source=collection_link&creator=2225896"
 	},
 	"item": [
 		{
@@ -202,7 +202,7 @@
 					"response": []
 				},
 				{
-					"name": "register-user",
+					"name": "register-super-admin",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -273,6 +273,313 @@
 							]
 						},
 						"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/register/user \\\n  --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMzEzNzcxNCwianRpIjoiOTQ2ZmE0NDUtMGU2NC00MjFjLThjODMtOTlkZThiZTc4NzU4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IntcImlkXCI6IDEsIFwidXNlcl9uYW1lXCI6IFwiYWRtaW5cIiwgXCJmaXJzdF9uYW1lXCI6IFwiYWRtaW5cIiwgXCJsYXN0X25hbWVcIjogXCJhZG1pblwiLCBcImVtYWlsXCI6IFwiYWRtaW5AdXdhemkuY29tXCIsIFwib3JnX2lkXCI6IDEsIFwicm9sZV9pZFwiOiAyfSIsIm5iZiI6MTczMzEzNzcxNCwiZXhwIjoxNzMzMTM4NjE0fQ.Dvr2qA2eQrSrykzfKFY6Y2cgE8pUr96eixjSEg1hGWg' \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"user_name\": \"jmburu\",\n  \"first_name\": \"Johana\",\n  \"second_name\": \"Mbuguah\",\n  \"last_name\": \"Mburu\",\n  \"email\": \"johanambuguah@gmail.com\",\n  \"mobile_number\": \"+254723456789\",\n  \"org_id\": 1,\n  \"national_id\": \"12435678\",\n  \"gender\": \"female\",\n  \"dob\" : \"1995-01-01\"\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "register-hospital-admin",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({",
+									"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint",
+									"    method: 'POST',",
+									"    header: {",
+									"        'Content-Type': 'application/json',",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            email: 'admin@uwazi.com', // Replace with a valid email",
+									"            password: 'password'      // Replace with a valid password",
+									"        })",
+									"    }",
+									"}, function (err, response) {",
+									"    if (err) {",
+									"        console.log('Error during login:', err);",
+									"    } else {",
+									"        // Extract the token from the response and store it in an environment variable",
+									"        const token = response.json().access_token; // Adjust based on your API response",
+									"        pm.environment.set('authToken', token);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_name\": \"mfox\",\n  \"first_name\": \"Fanstastic\",\n  \"second_name\": \"Mistah\",\n  \"last_name\": \"Fox\",\n  \"email\": \"jmburu.works@gmail.com\",\n  \"mobile_number\": \"+254723456789\",\n  \"org_id\": 2,\n  \"national_id\": \"987654321\",\n  \"gender\": \"male\",\n  \"dob\" : \"1995-01-01\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost/api/v1/auth/register/user",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register",
+								"user"
+							]
+						},
+						"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/register/user \\\n  --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMzEzNzcxNCwianRpIjoiOTQ2ZmE0NDUtMGU2NC00MjFjLThjODMtOTlkZThiZTc4NzU4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IntcImlkXCI6IDEsIFwidXNlcl9uYW1lXCI6IFwiYWRtaW5cIiwgXCJmaXJzdF9uYW1lXCI6IFwiYWRtaW5cIiwgXCJsYXN0X25hbWVcIjogXCJhZG1pblwiLCBcImVtYWlsXCI6IFwiYWRtaW5AdXdhemkuY29tXCIsIFwib3JnX2lkXCI6IDEsIFwicm9sZV9pZFwiOiAyfSIsIm5iZiI6MTczMzEzNzcxNCwiZXhwIjoxNzMzMTM4NjE0fQ.Dvr2qA2eQrSrykzfKFY6Y2cgE8pUr96eixjSEg1hGWg' \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"user_name\": \"jmburu\",\n  \"first_name\": \"Johana\",\n  \"second_name\": \"Mbuguah\",\n  \"last_name\": \"Mburu\",\n  \"email\": \"johanambuguah@gmail.com\",\n  \"mobile_number\": \"+254723456789\",\n  \"org_id\": 1,\n  \"national_id\": \"12435678\",\n  \"gender\": \"female\",\n  \"dob\" : \"1995-01-01\"\n}'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "treatment-procedures",
+			"item": [
+				{
+					"name": "treatment: dental",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({",
+									"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint",
+									"    method: 'POST',",
+									"    header: {",
+									"        'Content-Type': 'application/json',",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            email: 'admin@uwazi.com', // Replace with a valid email",
+									"            password: 'password'      // Replace with a valid password",
+									"        })",
+									"    }",
+									"}, function (err, response) {",
+									"    if (err) {",
+									"        console.log('Error during login:', err);",
+									"    } else {",
+									"        // Extract the token from the response and store it in an environment variable",
+									"        const token = response.json().access_token; // Adjust based on your API response",
+									"        pm.environment.set('authToken', token);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\n        \"name\": \"Dental Surgery\",\n        \"description\": \"Surgical procedures for dental issues.\",\n        \"costs\": [\n            {\n                \"hospital_category\": \"public\",\n                \"min_cost\": 100.00,\n                \"maximum_cost\": 200.00\n            },\n            {\n                \"hospital_category\": \"private\",\n                \"min_cost\": 150.00,\n                \"maximum_cost\": 300.00\n            }\n        ]\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost/api/v1/treatment",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"api",
+								"v1",
+								"treatment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "treatment: c-section",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({",
+									"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint",
+									"    method: 'POST',",
+									"    header: {",
+									"        'Content-Type': 'application/json',",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            email: 'admin@uwazi.com', // Replace with a valid email",
+									"            password: 'password'      // Replace with a valid password",
+									"        })",
+									"    }",
+									"}, function (err, response) {",
+									"    if (err) {",
+									"        console.log('Error during login:', err);",
+									"    } else {",
+									"        // Extract the token from the response and store it in an environment variable",
+									"        const token = response.json().access_token; // Adjust based on your API response",
+									"        pm.environment.set('authToken', token);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\n        \"name\": \"C-Section\",\n        \"description\": \"Surgical delivery of a baby.\",\n        \"costs\": [\n            {\n                \"hospital_category\": \"public\",\n                \"min_cost\": 500.00,\n                \"maximum_cost\": 1000.00\n            },\n            {\n                \"hospital_category\": \"private\",\n                \"min_cost\": 750.00,\n                \"maximum_cost\": 1500.00\n            }\n        ]\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost/api/v1/treatment",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"api",
+								"v1",
+								"treatment"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "claims",
+			"item": [
+				{
+					"name": "create-claim",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({",
+									"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint",
+									"    method: 'POST',",
+									"    header: {",
+									"        'Content-Type': 'application/json',",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            email: 'jmburu.works@gmail.com', // Replace with a valid email",
+									"            password: 'X8RVAAGC8JCZ'      // Replace with a valid password",
+									"        })",
+									"    }",
+									"}, function (err, response) {",
+									"    if (err) {",
+									"        console.log('Error during login:', err);",
+									"    } else {",
+									"        // Extract the token from the response and store it in an environment variable",
+									"        const token = response.json().access_token; // Adjust based on your API response",
+									"        pm.environment.set('authToken', token);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"invoice_number\": \"INV8910\",\n    \"policy_number\": \"POL987654\",\n    \"invoice_amount\": 10,\n    \"treatment_id\": 1,\n    \"hospital_id\": 2,\n    \"insured_id\": 3,\n    \"claim_narration\": \"Emergency procedure due to an accident.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost/api/v1/claims",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"api",
+								"v1",
+								"claims"
+							]
+						}
 					},
 					"response": []
 				}
