@@ -1,8 +1,5 @@
-# Uwazi API Documentation
+# Uwazi API
 
-## Title: Uwazi API
-
-### Description:
 The Uwazi API helps hospital insurance providers verify if hospital insurance claims are valid or not.
 
 ---
