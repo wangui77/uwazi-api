@@ -8,7 +8,7 @@ services:
     volumes:
       - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf  # Nginx configuration
       - ./config/nginx/certs:/etc/nginx/certs:ro         # SSL certificates (read-only)
-      - ./frontend:/var/html/uwazi-frontend
+      - ./frontend:/var/html/uwazi-frontend              # Folder that serves the frontend's static files
     depends_on:
       - api
 
@@ -21,7 +21,7 @@ services:
     ports:
       - "${FLASK_PORT}:${FLASK_PORT}"
     volumes:
-      - .:/app  # Mount current directory to container
+      - .:/app  # Mount current directory into docker container
     depends_on:
       - database
     command: >
@@ -33,9 +33,9 @@ services:
     env_file:
       - .env
     ports:
-      - "${POSTGRES_PORT}:5432"  # Default PostgreSQL port
+      - "${POSTGRES_PORT}:5432"  # Default PostgreSQL port defined in .env file
     volumes:
-      - database-data:/var/lib/postgresql/data  # Persistent storage for PostgreSQL data
+      - database-data:/var/lib/postgresql/data  # Persistent storage for PostgreSQL data. This will persist data even if container is deleted.
 
 volumes:
   database-data:

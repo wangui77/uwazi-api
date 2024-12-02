@@ -1,6 +1,6 @@
 # Uwazi API
 
-The Uwazi API helps hospital insurance providers verify if hospital insurance claims are valid or not.
+The Uwazi API empowers insurance providers by streamlining the verification of hospital insurance claims. It determines whether treatment procedures are under-reported, within policy limits, or exceed the allowable limits. By providing comprehensive insights, the API equips insurers with the critical information needed to make well-informed decisions when approving claims.
 
 ---
 
@@ -186,7 +186,7 @@ The data seeded is defined in the `.env` or `.env.sample` file under the followi
 1. **Setup Postman Environment:**
    - Download the postman collection form this link: [Uwazi API Postman Collection Link](./docs/postman/uwazi-api.postman_collection.json)
 
-   - import the collection by clicking on the import button on thein postman
+   - Import the collection by clicking on the import button in postman
    ![postman-import-collection.png](./docs/images/postman-import-collection.png)
 
    - This brings up a modal where you can select the postman collection file you downloaded
@@ -195,7 +195,7 @@ The data seeded is defined in the `.env` or `.env.sample` file under the followi
    - Setup pre request scripts for routes that require authentication.
    ![postman-pre-request-script.png](./docs/images/postman-pre-request-script.png)
 
-   then pre-request script is:
+   The pre-request script is as follows:
    ```javascript
       pm.sendRequest({
          url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint
@@ -219,10 +219,10 @@ The data seeded is defined in the `.env` or `.env.sample` file under the followi
             pm.environment.set('authToken', token);
          }
       });
-
+   
    ```
    - Setup the authorization header for the use the `authToken` environment variable in postman
-      ![postman-headers.png](./docs/images/postman-headers.png)
+     ![postman-headers.png](./docs/images/postman-headers.png)
 
    - Repeat this for all the routes that require authentication in the postman collection
 
@@ -245,9 +245,9 @@ The data seeded is defined in the `.env` or `.env.sample` file under the followi
 `Docker` is a platform that allows you to containerize applications. A Docker container packages an application and its dependencies, ensuring it runs consistently across different environments.
 
 Advantages of Docker include:
-   - `Portability`: Applications run the same regardless of where they are deployed. 
-   - `Dependency Isolation`: Each container has its own isolated environment.
-   - `Simplified Deployment`: Applications can be easily started, stopped, and scaled using Docker.     |
+- `Portability`: Applications run the same regardless of where they are deployed. 
+- `Dependency Isolation`: Each container has its own isolated environment.
+- `Simplified Deployment`: Applications can be easily started, stopped, and scaled using Docker.
 
 
 `Docker Compose` is a tool that simplifies the management of multi-container Docker applications. With Docker Compose, you can define your application’s services, networks, and volumes in a single file (docker-compose.yml), making it easier to start, stop, and manage the entire system.
@@ -256,7 +256,7 @@ Advantages of Docker Compose include:
 - `Multi-Container Setup`:	Allows you to manage multiple services (e.g., API, database, and proxy) as one application.
 - `Configuration in Code`:	All service definitions (e.g., ports, volumes, dependencies) are stored in a YAML file for easy reproducibility.
 - `Service Dependency Management`:	Automatically ensures services start in the correct order using depends_on.
-Scaling	You can scale services (e.g., multiple API instances) with a single command.
+- `Scaling`	You can scale services (e.g., multiple API instances) with a single command.
 - `Networking`:	Automatically sets up a private network for all services, enabling seamless communication.
 
 
@@ -270,7 +270,7 @@ This setup uses three main services:
 
 ### Communication Between Services
 
-- **nginx service and api Service:** Nginx forwards incoming requests (e.g., `https://localhost`) to the Flask API running in the `api` container.
+- **nginx service and api Service:** Nginx forwards incoming requests (e.g., [https://localhost/api/v1/health](https://localhost/api/v1/health) ) to the Flask API running in the `api` container.
 - **api service and database service:** The Flask application interacts with the PostgreSQL database to store and retrieve data. This communication happens within the Docker network.
 
 ---
@@ -312,6 +312,7 @@ services:
     volumes:
       - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf  # Nginx configuration
       - ./config/nginx/certs:/etc/nginx/certs:ro         # SSL certificates (read-only)
+      - ./frontend:/var/html/uwazi-frontend              # Folder that serves the frontend's static files
     depends_on:
       - api
 
@@ -324,7 +325,7 @@ services:
     ports:
       - "${FLASK_PORT}:${FLASK_PORT}"
     volumes:
-      - .:/app  # Mount current directory to container
+      - .:/app  # Mount current directory into docker container
     depends_on:
       - database
     command: >
@@ -336,9 +337,9 @@ services:
     env_file:
       - .env
     ports:
-      - "${POSTGRES_PORT}:5432"  # Default PostgreSQL port
+      - "${POSTGRES_PORT}:5432"  # Default PostgreSQL port defined in .env file
     volumes:
-      - database-data:/var/lib/postgresql/data  # Persistent storage for PostgreSQL data
+      - database-data:/var/lib/postgresql/data  # Persistent storage for PostgreSQL data. This will persist data even if container is deleted.
 
 volumes:
   database-data:
@@ -347,13 +348,13 @@ volumes:
 
 #### **Nginx service**
 
-| Line                                  | Explanation                                                                                       |
-|--------------------------------------|---------------------------------------------------------------------------------------------------|
-| `image: nginx:latest`                | Specifies that the latest NGINX image will be used for this service.                             |
-| `container_name: nginx`              | Sets the name of the container to `nginx`.                                                       |
-| `ports:`                             | Maps ports between the host and container for HTTP (80) and HTTPS (443).                         |
-| `volumes:`                           | Mounts files from the host to the container for NGINX configuration and SSL certificates.         |
-| `depends_on: - api`                  | Ensures that the `api` service starts before NGINX.                                              |
+| Line                    | Explanation                                                  |
+|-------------------------|--------------------------------------------------------------|
+| `image: nginx:latest`   | Specifies that the latest NGINX image will be used for this service. |
+| `container_name: nginx` | Sets the name of the container to `nginx`.                   |
+| `ports:`                | Maps ports between the host and container for HTTP (80) and HTTPS (443). |
+| `volumes:`              | Mounts files from the host (your computer) to the docker container for NGINX configuration and SSL certificates. |
+| `depends_on: - api`     | Ensures that the `api` service starts before NGINX.          |
 
 #### **API service**
 
@@ -398,7 +399,6 @@ The Nginx configuration file (`config/nginx/nginx.conf`) is structured as follow
 
 ```nginx
 # Main NGINX configuration file
-# Main NGINX configuration file
 events {
     # Worker connections
     worker_connections 1024;
@@ -440,7 +440,7 @@ http {
         add_header X-Frame-Options DENY;
         add_header X-XSS-Protection "1; mode=block";
 
-        # Serve static files from the 'app' folder
+        # Serve static files from the '/var/html/uwazi-frontend' folder
         location / {
             root /var/html/uwazi-frontend; # This is where the built frontend static files are served from
             index index.html;
@@ -486,5 +486,3 @@ http {
 | `add_header Strict-Transport-Security...` | Adds security headers to enforce best practices for HTTPS connections.                          |
 | `proxy_pass http://api:8080;`        | Forwards all incoming requests to the Flask API running on port 8080.                            |
 | `proxy_set_header Host $host;`       | Passes the original `Host` header to the proxied server.                                          |
-
----
