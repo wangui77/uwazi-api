@@ -95,7 +95,7 @@ The Uwazi API helps hospital insurance providers verify if hospital insurance cl
    - Copy the generated `localhost-key.pem` and `localhost.pem` files to the `config/nginx/certs` directory.
 
 4. **Test HTTPS Locally:**
-   - Use `https://localhost/health` to test your application without specifying a port.
+   - Use [https://localhost/api/v1/health](https://localhost/api/v1/health) to test your application without specifying a port.
    This should return the following response:
    ```json
    {
@@ -134,7 +134,7 @@ The Uwazi API utilizes Docker for containerization, making it easy to set up and
      ```
 
 2. **Access the Application:**
-   - Open your browser and navigate to `https://localhost/api/health` to verify the application is running.
+   - Open your browser and navigate to [https://localhost/api/v1/health](https://localhost/api/v1/health) to verify the application is running.
 
 
 
@@ -198,7 +198,7 @@ The data seeded is defined in the `.env` or `.env.sample` file under the followi
    then pre-request script is:
    ```javascript
       pm.sendRequest({
-         url: 'https://localhost/auth/login', // Replace with your auth endpoint
+         url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint
          method: 'POST',
          header: {
             'Content-Type': 'application/json',
@@ -206,8 +206,8 @@ The data seeded is defined in the `.env` or `.env.sample` file under the followi
          body: {
             mode: 'raw',
             raw: JSON.stringify({
-                  email: 'admin@uwazi.com', 
-                  password: 'password' 
+                  email: 'admin@uwazi.com', // Replace with a valid email
+                  password: 'password'      // Replace with a valid password
             })
          }
       }, function (err, response) {
@@ -219,6 +219,7 @@ The data seeded is defined in the `.env` or `.env.sample` file under the followi
             pm.environment.set('authToken', token);
          }
       });
+
    ```
    - Setup the authorization header for the use the `authToken` environment variable in postman
       ![postman-headers.png](./docs/images/postman-headers.png)
@@ -397,6 +398,7 @@ The Nginx configuration file (`config/nginx/nginx.conf`) is structured as follow
 
 ```nginx
 # Main NGINX configuration file
+# Main NGINX configuration file
 events {
     # Worker connections
     worker_connections 1024;
@@ -438,8 +440,15 @@ http {
         add_header X-Frame-Options DENY;
         add_header X-XSS-Protection "1; mode=block";
 
-        # Reverse proxy to Flask
+        # Serve static files from the 'app' folder
         location / {
+            root /var/html/uwazi-frontend; # This is where the built frontend static files are served from
+            index index.html;
+            try_files $uri $uri/ =404;
+        }
+
+        # Reverse proxy only requests starting with '/api' to Flask
+        location /api {
             proxy_pass http://api:8080;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
@@ -449,6 +458,7 @@ http {
         }
     }
 }
+
 
 ```
 
