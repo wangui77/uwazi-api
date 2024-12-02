@@ -1,12 +1,24 @@
 from flask import jsonify, request
 from flask_jwt_extended import set_access_cookies, set_refresh_cookies
 
+from services.claims_service import claims_service
 from services.jwt_service import jwt_service
 from services.registration_service import registration_service
+from services.treatment_service import treatment_service
+from utils.routes import create_route_with_prefix
 
 
-def register_auth_routes(app):
-    @app.route("/api/v1/auth/login", methods=["POST"])
+def general_routes(app):
+    # Health check endpoint
+    from utils.routes import create_route_with_prefix
+
+    @app.route(create_route_with_prefix("/health"), methods=["GET"])
+    def health():
+        return {"status": "healthy"}, 200
+
+
+def auth_routes(app):
+    @app.route(create_route_with_prefix("/auth/login"), methods=["POST"])
     def login():
         from services.user_service import user_service
 
@@ -55,7 +67,7 @@ def register_auth_routes(app):
 
         return response, 200
 
-    @app.route("/api/v1/auth/logout", methods=["POST"])
+    @app.route(create_route_with_prefix("/auth/logout"), methods=["POST"])
     def logout():
         # Get the JWT from the Authorization header or cookie
         token = jwt_service.get_token_from_request(request)
@@ -78,7 +90,7 @@ def register_auth_routes(app):
 
         return response, 200
 
-    @app.route("/api/v1/auth/refresh", methods=["POST"])
+    @app.route(create_route_with_prefix("/auth/refresh"), methods=["POST"])
     def refresh_token():
         identity = jwt_service.get_identity()
         access_token, refresh_token = jwt_service.generate_tokens(identity)
@@ -93,7 +105,7 @@ def register_auth_routes(app):
         set_refresh_cookies(response, refresh_token)
         return response, 200
 
-    @app.route("/api/v1/auth/register/<registration_type>", methods=["POST"])
+    @app.route(create_route_with_prefix("/auth/register/<registration_type>"), methods=["POST"])
     def register(registration_type):
         registration_type = registration_type.lower()
 
@@ -107,3 +119,26 @@ def register_auth_routes(app):
             return jsonify({"error": f"Invalid registration type: {registration_type}"}), 400
 
         return jsonify(response), response_code
+
+
+def treatment_routes(app):
+    @app.route(create_route_with_prefix("/treatment"), methods=["POST"])
+    def treatment():
+        response, response_code = treatment_service.create_treatment_with_costs(
+            request)
+        return response, response_code
+
+
+def claims_routes(app):
+    @app.route(create_route_with_prefix("/claims"), methods=["POST"])
+    def claim():
+        response, response_code = claims_service.create_claim(
+            request)
+        return response, response_code
+
+
+def register_routes(app):
+    auth_routes(app)
+    general_routes(app)
+    claims_routes(app)
+    treatment_routes(app)

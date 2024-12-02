@@ -26,23 +26,5 @@ class UserService:
         except Exception as e:
             raise Exception(f"Failed to verify user: {str(e)}")
 
-    @staticmethod
-    def create_user(firstname, lastname, email, password, org_id):
-        try:
-            hashed_password = generate_password_hash(password)
-            new_user = User(
-                firstname=firstname,
-                lastname=lastname,
-                email=email,
-                org_id=org_id,
-                password_hash=hashed_password,
-            )
-            db.session.add(new_user)
-            db.session.commit()
-            return new_user
-        except Exception as e:
-            db.session.rollback()
-            raise Exception(f"Failed to create user: {str(e)}")
-
 
 user_service = UserService()

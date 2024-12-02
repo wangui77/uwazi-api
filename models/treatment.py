@@ -15,7 +15,7 @@ class Treatment(db.Model):
     created_by = db.Column(db.String(100))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     approved_by = db.Column(db.String(100))
-    approved_at = db.Column(db.DateTime)
+    approved_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Status
     status_code = db.Column(db.String(50))

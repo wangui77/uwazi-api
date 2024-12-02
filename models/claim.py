@@ -11,29 +11,53 @@ class Claim(db.Model):
 
     # Claim Identification
     claim_reference = db.Column(db.String(50), nullable=False, index=True)
-    invoice_number = db.Column(db.String(50), nullable=False, index=True)
+    invoice_number = db.Column(
+        db.String(50), unique=True, nullable=False, index=True)
     policy_number = db.Column(db.String(50))
 
-    # Procedure Details
-    procedure_code = db.Column(db.String(50))
+    # populated from the associated treatment cost
     invoice_amount = db.Column(db.Numeric(15, 2))
+
+    # populated from the associated treatment cost
     min_cost = db.Column(db.Numeric(15, 2))
     maximum_cost = db.Column(db.Numeric(15, 2))
+
+    # possible-under-reporting, within-limit, above-limit -> calculated based on min_cost and max_cost and invoice_amount
     risk_classification = db.Column(db.String(50))
+
+    # comments on the claim info by the hospital
     claim_narration = db.Column(db.String(500))
 
     # Authorization
+    # hospital admin user name
     created_by = db.Column(db.String(100))
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # insurance admin user name
     approved_by = db.Column(db.String(100))
+
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_approved = db.Column(db.DateTime)
+
+    # remarks on the approval by the insurance admin
     approval_remarks = db.Column(db.String(255))
 
     # Status
+    # | Code    | Description
+    # | ------- | -----------
+    # | 00      | Pending
+    # | 01      | Approved
+    # | 02      | Rejected
+    # | 03      | Disputed
     status_code = db.Column(db.String(50))
     status_description = db.Column(db.Text)
 
     # Relationships
+    treatment_id = db.Column(
+        db.Integer,
+        db.ForeignKey('treatments.id', ondelete='CASCADE'),
+        nullable=False
+    )
+
     hospital_id = db.Column(
         db.Integer,
         db.ForeignKey("organisations.id", ondelete="CASCADE"),

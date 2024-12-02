@@ -9,8 +9,7 @@ from flask_jwt_extended import JWTManager
 from config.config import Config
 from config.database.seed import seed
 from middlewares import middlewares
-from routes.auth import register_auth_routes
-from routes.general import register_general_routes
+from routes import register_routes
 from services.db_service import db
 
 
@@ -47,8 +46,7 @@ class App:
             seed()
 
         # Register routes
-        register_general_routes(self.app)
-        register_auth_routes(self.app)
+        register_routes(self.app)
 
         # Register middlewares
         middlewares(self.app)
@@ -63,4 +61,5 @@ class App:
 
 app, debug_mode, flask_port = App().get()
 
-app.run(host="0.0.0.0", port=flask_port, debug=debug_mode)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=flask_port, debug=debug_mode)

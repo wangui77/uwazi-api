@@ -205,7 +205,7 @@ class RegistrationService:
             email_address=data["email_address"],
             mobile_number=data["mobile_number"],
             hospital_category=data.get("hospital_category"),
-            status_code="02",
+            status_code="01",
             status_description="Active",
             created_by=admin_data["user_name"],
             approved_by=admin_data["user_name"],
@@ -278,7 +278,7 @@ class RegistrationService:
             org_id=data["org_id"],
             created_by=admin_data_or_error["user_name"],
             approved_by=admin_data_or_error["user_name"],
-            status_code="02",
+            status_code="01",
             status_description="Active",
         )
 
