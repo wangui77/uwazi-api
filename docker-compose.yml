@@ -21,7 +21,6 @@ services:
       - "${FLASK_PORT}:${FLASK_PORT}"
     volumes:
       - .:/app  # Mount current directory to container
-      # - /app/venv  # Avoid overwriting virtual environment in Docker
     depends_on:
       - database
     command: >

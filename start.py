@@ -1,14 +1,16 @@
 import os
+from datetime import timedelta
 
 from dotenv import load_dotenv
 from flask import Flask
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
 
 from config.config import Config
 from config.database.seed import seed
 from middlewares import middlewares
 from routes.auth import register_auth_routes
-from routes.health import register_general_routes
+from routes.general import register_general_routes
 from services.db_service import db
 
 
@@ -24,6 +26,16 @@ class App:
 
         # Setup API security
         CORS(self.app)
+
+        # Setup JWT management
+        self.app.config["JWT_SECRET_KEY"] = os.getenv(
+            "SECRET_KEY", "9VV69kGgnBQkt23Rn8Gx2oweiutxFo4prbVY-EbSt8Q="
+        )
+        self.app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)
+        self.app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=7)
+
+        # Initialize JWTManager with the Flask app
+        jwt = JWTManager(self.app)
 
         # Setup database tables, database connection uri and seeds
         self.app.config["SQLALCHEMY_DATABASE_URI"] = Config.get_db_uri()

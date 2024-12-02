@@ -14,7 +14,7 @@ def middlewares(app):
                             for key, value in dict(request.__dict__).items()}
 
             # Pretty-print the serialized dictionary
-            print(json.dumps(request_dict, indent=4), flush=True)
+            # print(json.dumps(request_dict, indent=4), flush=True)
         except Exception as e:
             print(f"Error while serializing request.__dict__: {e}", flush=True)
 
@@ -23,21 +23,13 @@ def middlewares(app):
         # Skip middleware for specific public routes
         public_endpoints = [
             "/auth/login",
-            "/auth/register",
             "/health"
         ]
-
         if request.path in public_endpoints:
             return
 
-        # Get the JWT from the Authorization header or cookie
-        token = None
-        if "Authorization" in request.headers and request.headers["Authorization"].startswith("Bearer "):
-            token = request.headers["Authorization"].split(" ")[1]
-        elif "access_token" in request.cookies:
-            token = request.cookies.get("access_token")
-
-        # Validate the token
+        # Validate token
+        token = jwt_service.get_token_from_request(request)
         if not token:
             return jsonify({"error": "Unauthorized", "message": "Missing token"}), 401
 

@@ -6,10 +6,7 @@ load_dotenv()
 
 
 class Config:
-    # Flask Configuration
-    SECRET_KEY = os.getenv(
-        "SECRET_KEY", "9VV69kGgnBQkt23Rn8Gx2oweiutxFo4prbVY-EbSt8Q="
-    )
+
     # Disable modification tracking overhead
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
