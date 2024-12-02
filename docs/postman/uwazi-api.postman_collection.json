@@ -13,12 +13,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://localhost/health",
+					"raw": "https://localhost/api/v1/health",
 					"protocol": "https",
 					"host": [
 						"localhost"
 					],
 					"path": [
+						"api",
+						"v1",
 						"health"
 					]
 				},
@@ -46,12 +48,14 @@
 					}
 				},
 				"url": {
-					"raw": "https://localhost/auth/login",
+					"raw": "https://localhost/api/v1/auth/login",
 					"protocol": "https",
 					"host": [
 						"localhost"
 					],
 					"path": [
+						"api",
+						"v1",
 						"auth",
 						"login"
 					]
@@ -62,12 +66,46 @@
 		},
 		{
 			"name": "register-hospital",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({",
+							"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint",
+							"    method: 'POST',",
+							"    header: {",
+							"        'Content-Type': 'application/json',",
+							"    },",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: JSON.stringify({",
+							"            email: 'admin@uwazi.com', // Replace with a valid email",
+							"            password: 'password'      // Replace with a valid password",
+							"        })",
+							"    }",
+							"}, function (err, response) {",
+							"    if (err) {",
+							"        console.log('Error during login:', err);",
+							"    } else {",
+							"        // Extract the token from the response and store it in an environment variable",
+							"        const token = response.json().access_token; // Adjust based on your API response",
+							"        pm.environment.set('authToken', token);",
+							"    }",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMzEzNzcxNCwianRpIjoiOTQ2ZmE0NDUtMGU2NC00MjFjLThjODMtOTlkZThiZTc4NzU4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IntcImlkXCI6IDEsIFwidXNlcl9uYW1lXCI6IFwiYWRtaW5cIiwgXCJmaXJzdF9uYW1lXCI6IFwiYWRtaW5cIiwgXCJsYXN0X25hbWVcIjogXCJhZG1pblwiLCBcImVtYWlsXCI6IFwiYWRtaW5AdXdhemkuY29tXCIsIFwib3JnX2lkXCI6IDEsIFwicm9sZV9pZFwiOiAyfSIsIm5iZiI6MTczMzEzNzcxNCwiZXhwIjoxNzMzMTM4NjE0fQ.Dvr2qA2eQrSrykzfKFY6Y2cgE8pUr96eixjSEg1hGWg"
+						"value": "Bearer {{authToken}}"
 					},
 					{
 						"key": "Content-Type",
@@ -76,7 +114,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"type\": \"hospital\",\n  \"name\": \"St. Luke's Hospital\",\n  \"email_address\": \"info@stlikeshospital.com\",\n  \"mobile_number\": \"+254712345678\",\n  \"head_quarter_location\": \"Nairobi, Kenya\",\n  \"kra_pin\": \"A123456789X99\",\n  \"hospital_category\": \"public\"\n}",
+					"raw": "{\n  \"type\": \"hospital\",\n  \"name\": \"XX Hospital\",\n  \"email_address\": \"info@xxhosi.com\",\n  \"mobile_number\": \"+254712345678\",\n  \"head_quarter_location\": \"Nairobi, Kenya\",\n  \"kra_pin\": \"A123456789X99JASD\",\n  \"hospital_category\": \"public\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -84,12 +122,14 @@
 					}
 				},
 				"url": {
-					"raw": "https://localhost/auth/register/organisation",
+					"raw": "https://localhost/api/v1/auth/register/organisation",
 					"protocol": "https",
 					"host": [
 						"localhost"
 					],
 					"path": [
+						"api",
+						"v1",
 						"auth",
 						"register",
 						"organisation"
@@ -101,12 +141,46 @@
 		},
 		{
 			"name": "register-insurance-company",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({",
+							"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint",
+							"    method: 'POST',",
+							"    header: {",
+							"        'Content-Type': 'application/json',",
+							"    },",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: JSON.stringify({",
+							"            email: 'admin@uwazi.com', // Replace with a valid email",
+							"            password: 'password'      // Replace with a valid password",
+							"        })",
+							"    }",
+							"}, function (err, response) {",
+							"    if (err) {",
+							"        console.log('Error during login:', err);",
+							"    } else {",
+							"        // Extract the token from the response and store it in an environment variable",
+							"        const token = response.json().access_token; // Adjust based on your API response",
+							"        pm.environment.set('authToken', token);",
+							"    }",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMzEzNzcxNCwianRpIjoiOTQ2ZmE0NDUtMGU2NC00MjFjLThjODMtOTlkZThiZTc4NzU4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IntcImlkXCI6IDEsIFwidXNlcl9uYW1lXCI6IFwiYWRtaW5cIiwgXCJmaXJzdF9uYW1lXCI6IFwiYWRtaW5cIiwgXCJsYXN0X25hbWVcIjogXCJhZG1pblwiLCBcImVtYWlsXCI6IFwiYWRtaW5AdXdhemkuY29tXCIsIFwib3JnX2lkXCI6IDEsIFwicm9sZV9pZFwiOiAyfSIsIm5iZiI6MTczMzEzNzcxNCwiZXhwIjoxNzMzMTM4NjE0fQ.Dvr2qA2eQrSrykzfKFY6Y2cgE8pUr96eixjSEg1hGWg"
+						"value": "Bearer {{authToken}}"
 					},
 					{
 						"key": "Content-Type",
@@ -123,12 +197,14 @@
 					}
 				},
 				"url": {
-					"raw": "https://localhost/auth/register/organisation",
+					"raw": "https://localhost/api/v1/auth/register/organisation",
 					"protocol": "https",
 					"host": [
 						"localhost"
 					],
 					"path": [
+						"api",
+						"v1",
 						"auth",
 						"register",
 						"organisation"
@@ -140,12 +216,46 @@
 		},
 		{
 			"name": "register-user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({",
+							"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint",
+							"    method: 'POST',",
+							"    header: {",
+							"        'Content-Type': 'application/json',",
+							"    },",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: JSON.stringify({",
+							"            email: 'admin@uwazi.com', // Replace with a valid email",
+							"            password: 'password'      // Replace with a valid password",
+							"        })",
+							"    }",
+							"}, function (err, response) {",
+							"    if (err) {",
+							"        console.log('Error during login:', err);",
+							"    } else {",
+							"        // Extract the token from the response and store it in an environment variable",
+							"        const token = response.json().access_token; // Adjust based on your API response",
+							"        pm.environment.set('authToken', token);",
+							"    }",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMzEzNzcxNCwianRpIjoiOTQ2ZmE0NDUtMGU2NC00MjFjLThjODMtOTlkZThiZTc4NzU4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IntcImlkXCI6IDEsIFwidXNlcl9uYW1lXCI6IFwiYWRtaW5cIiwgXCJmaXJzdF9uYW1lXCI6IFwiYWRtaW5cIiwgXCJsYXN0X25hbWVcIjogXCJhZG1pblwiLCBcImVtYWlsXCI6IFwiYWRtaW5AdXdhemkuY29tXCIsIFwib3JnX2lkXCI6IDEsIFwicm9sZV9pZFwiOiAyfSIsIm5iZiI6MTczMzEzNzcxNCwiZXhwIjoxNzMzMTM4NjE0fQ.Dvr2qA2eQrSrykzfKFY6Y2cgE8pUr96eixjSEg1hGWg"
+						"value": "Bearer {{authToken}}"
 					},
 					{
 						"key": "Content-Type",
@@ -162,12 +272,14 @@
 					}
 				},
 				"url": {
-					"raw": "https://localhost/auth/register/user",
+					"raw": "https://localhost/api/v1/auth/register/user",
 					"protocol": "https",
 					"host": [
 						"localhost"
 					],
 					"path": [
+						"api",
+						"v1",
 						"auth",
 						"register",
 						"user"

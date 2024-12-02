@@ -8,6 +8,7 @@ services:
     volumes:
       - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf  # Nginx configuration
       - ./config/nginx/certs:/etc/nginx/certs:ro         # SSL certificates (read-only)
+      - ./frontend:/var/html/uwazi-frontend
     depends_on:
       - api
 

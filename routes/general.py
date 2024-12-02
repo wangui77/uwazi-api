@@ -7,6 +7,6 @@ from services.jwt_service import jwt_service
 
 def register_general_routes(app):
     # Health check endpoint
-    @app.route("/health", methods=["GET"])
+    @app.route("/api/v1/health", methods=["GET"])
     def health():
         return {"status": "healthy"}, 200

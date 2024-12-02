@@ -6,7 +6,7 @@ from services.registration_service import registration_service
 
 
 def register_auth_routes(app):
-    @app.route("/auth/login", methods=["POST"])
+    @app.route("/api/v1/auth/login", methods=["POST"])
     def login():
         from services.user_service import user_service
 
@@ -55,7 +55,7 @@ def register_auth_routes(app):
 
         return response, 200
 
-    @app.route("/auth/logout", methods=["POST"])
+    @app.route("/api/v1/auth/logout", methods=["POST"])
     def logout():
         # Get the JWT from the Authorization header or cookie
         token = jwt_service.get_token_from_request(request)
@@ -78,7 +78,7 @@ def register_auth_routes(app):
 
         return response, 200
 
-    @app.route("/auth/refresh", methods=["POST"])
+    @app.route("/api/v1/auth/refresh", methods=["POST"])
     def refresh_token():
         identity = jwt_service.get_identity()
         access_token, refresh_token = jwt_service.generate_tokens(identity)
@@ -93,7 +93,7 @@ def register_auth_routes(app):
         set_refresh_cookies(response, refresh_token)
         return response, 200
 
-    @app.route("/auth/register/<registration_type>", methods=["POST"])
+    @app.route("/api/v1/auth/register/<registration_type>", methods=["POST"])
     def register(registration_type):
         registration_type = registration_type.lower()
 
