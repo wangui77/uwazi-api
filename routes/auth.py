@@ -1,5 +1,6 @@
 from flask import jsonify, request
 from flask_jwt_extended import set_access_cookies, set_refresh_cookies
+
 from services.jwt_service import jwt_service
 from services.registration_service import registration_service
 

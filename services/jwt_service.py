@@ -6,8 +6,8 @@ from cryptography.fernet import Fernet
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 decode_token, get_jwt_identity,
                                 verify_jwt_in_request)
-from models.token import Token
 
+from models.token import Token
 from services.db_service import db
 
 # Ideally, fetch this from environment variables

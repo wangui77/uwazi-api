@@ -1,7 +1,7 @@
 from flask import jsonify
-from models.user import User
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from models.user import User
 from services.db_service import db
 
 

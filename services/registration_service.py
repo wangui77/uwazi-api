@@ -1,16 +1,16 @@
 import uuid
 from datetime import datetime
 
+from sqlalchemy.exc import SQLAlchemyError
+from werkzeug.security import generate_password_hash
+
 from models.organisation import Organisation
 from models.role import Role
 from models.user import User
-from sqlalchemy.exc import SQLAlchemyError
-from utils.auth import generate_strong_password
-from utils.email import send_password_email
-from werkzeug.security import generate_password_hash
-
 from services.db_service import db
 from services.jwt_service import jwt_service
+from utils.auth import generate_strong_password
+from utils.email import send_password_email
 
 
 class RegistrationService:

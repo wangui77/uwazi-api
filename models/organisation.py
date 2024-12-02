@@ -12,11 +12,12 @@ class Organisation(db.Model):
     # Organization Details
     code = db.Column(db.String(50), unique=True, nullable=False, index=True)
     name = db.Column(db.String(255), nullable=False)
-    type = db.Column(db.String(50), nullable=False)  # "hospital", "insurance", or "provider"
+    # "hospital", "insurance", or "provider"
+    type = db.Column(db.String(50), nullable=False)
 
     # Tax
     kra_pin = db.Column(db.String(50), nullable=True)
-    
+
     # Location
     head_quarter_location = db.Column(db.String(255), nullable=True)
 
@@ -25,7 +26,8 @@ class Organisation(db.Model):
     mobile_number = db.Column(db.String(20), nullable=True)
 
     # Hospital-specific field
-    hospital_category = db.Column(db.String(50), nullable=True)  # Applies only to hospitals, i.e., "public", "private"
+    # Applies only to hospitals, i.e., "public", "private"
+    hospital_category = db.Column(db.String(50), nullable=True)
 
     # Timestamps
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

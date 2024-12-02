@@ -233,8 +233,14 @@ The data seeded is defined in the `.env` or `.env.sample` file under the followi
 
 ---
 
+## 4. Uwazi Database entity relationship diagram (ERD)
+![uwazi-db-erd.png](./docs/images/uwazi-db-erd.png)
 
-## 4. Uwazi Docker Overview
+
+---
+
+
+## 5. Uwazi Docker Overview
 `Docker` is a platform that allows you to containerize applications. A Docker container packages an application and its dependencies, ensuring it runs consistently across different environments.
 
 Advantages of Docker include:

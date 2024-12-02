@@ -2,6 +2,7 @@ import json
 from functools import wraps
 
 from flask import jsonify, request
+
 from services.jwt_service import jwt_service
 
 

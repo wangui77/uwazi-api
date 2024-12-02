@@ -1,6 +1,7 @@
 from flask import jsonify, request
 from flask_jwt_extended import (jwt_required, set_access_cookies,
                                 set_refresh_cookies)
+
 from services.jwt_service import jwt_service
 
 

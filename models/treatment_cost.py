@@ -6,8 +6,9 @@ from services.db_service import db
 class TreatmentCost(db.Model):
     __tablename__ = "treatment_costs"
 
-    id = db.Column(db.Integer, primary_key=True)   
-    hospital_category = db.Column(db.String(50), nullable=False)  # e.g., "public", "private"
+    id = db.Column(db.Integer, primary_key=True)
+    # e.g., "public", "private"
+    hospital_category = db.Column(db.String(50), nullable=False)
 
     # Costs
     min_cost = db.Column(db.Numeric(15, 2), nullable=False)
@@ -28,4 +29,5 @@ class TreatmentCost(db.Model):
     status_description = db.Column(db.Text)
 
     # Relationships
-    treatment_id = db.Column(db.Integer, db.ForeignKey("treatments.id"), nullable=False)  # Foreign key to Treatment
+    treatment_id = db.Column(db.Integer, db.ForeignKey(
+        "treatments.id"), nullable=False)  # Foreign key to Treatment
