@@ -1,9 +1,7 @@
 from flask import jsonify, request
-from flask_jwt_extended import (jwt_required, set_access_cookies,
-                                set_refresh_cookies)
-from models.organisation import Organisation
-from models.role import Role
+from flask_jwt_extended import set_access_cookies, set_refresh_cookies
 from services.jwt_service import jwt_service
+from services.registration_service import registration_service
 
 
 def register_auth_routes(app):
@@ -22,7 +20,7 @@ def register_auth_routes(app):
         # Generate new tokens
         identity_claims = {
             "id": user.id,
-            "username": user.user_name,
+            "user_name": user.user_name,
             "first_name": user.first_name,
             "last_name": user.last_name,
             "email": user.email,
@@ -82,8 +80,6 @@ def register_auth_routes(app):
     @app.route("/auth/refresh", methods=["POST"])
     def refresh_token():
         identity = jwt_service.get_identity()
-
-        print("identity", identity)
         access_token, refresh_token = jwt_service.generate_tokens(identity)
 
         jwt_service.store_token(
@@ -96,37 +92,17 @@ def register_auth_routes(app):
         set_refresh_cookies(response, refresh_token)
         return response, 200
 
-    @app.route("/auth/register/organisation", methods=["POST"])
-    def register():
-        '''
-            - We need to seed the database with the default user
-            - The default user can then create other users if they are a super admin
-            - The default user can also create other super admins if they are a super admin
-            - The default user can change their password if they are a super admin
-        '''
-        # Get the JWT from the Authorization header or cookie
-        token = jwt_service.get_token_from_request(request)
-        if not token:
-            return jsonify({"error": "Unauthorized", "message": "Missing token"}), 401
+    @app.route("/auth/register/<registration_type>", methods=["POST"])
+    def register(registration_type):
+        registration_type = registration_type.lower()
 
-        # Ensure the user is a super admin from the provider organisation
-        current_user_claims = jwt_service.decode_identity(token)
-        organisation_id = current_user_claims["org_id"]
-        role_id = current_user_claims["role_id"]
+        if registration_type == "organisation":
+            response, response_code = registration_service.register_organisation(
+                request)
+        elif registration_type == "user":
+            response, response_code = registration_service.register_user(
+                request)
+        else:
+            return jsonify({"error": f"Invalid registration type: {registration_type}"}), 400
 
-        organisation_type = Organisation.query.filter_by(
-            id=organisation_id
-        ).first().type
-
-        role = Role.query.filter_by(id=role_id).first().role_code
-
-        if not role == "super_admin" or not organisation_type == "provider":
-            return jsonify({"error": "You are not authorized to create an organisation"}), 401
-
-        # Ensure that the organisation details are provided in the request body
-        # TODO: Add validation for the organisation request body
-
-        response = jsonify(
-            {"organisation_id": organisation_id, "role_id": role_id,  "organisation_type": organisation_type, "role": role})
-
-        return response, 200
+        return jsonify(response), response_code

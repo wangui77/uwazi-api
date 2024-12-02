@@ -121,7 +121,7 @@ class JWTService:
         decoded_claims = self.decode_identity(token)
 
         if not decoded_claims:
-            return False, "Invalid token claims"
+            return False, "Token expired or invalid"
 
         print(f"decoded_claims: {decoded_claims}")
 
