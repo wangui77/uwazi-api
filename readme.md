@@ -246,8 +246,8 @@ Advantages of Docker include:
 `Docker Compose` is a tool that simplifies the management of multi-container Docker applications. With Docker Compose, you can define your application’s services, networks, and volumes in a single file (docker-compose.yml), making it easier to start, stop, and manage the entire system.
 
 Advantages of Docker Compose include:
- - `Multi-Container Setup`:	Allows you to manage multiple services (e.g., API, database, and proxy) as one application.
--` Configuration in Code`:	All service definitions (e.g., ports, volumes, dependencies) are stored in a YAML file for easy reproducibility.
+- `Multi-Container Setup`:	Allows you to manage multiple services (e.g., API, database, and proxy) as one application.
+- `Configuration in Code`:	All service definitions (e.g., ports, volumes, dependencies) are stored in a YAML file for easy reproducibility.
 - `Service Dependency Management`:	Automatically ensures services start in the correct order using depends_on.
 Scaling	You can scale services (e.g., multiple API instances) with a single command.
 - `Networking`:	Automatically sets up a private network for all services, enabling seamless communication.
