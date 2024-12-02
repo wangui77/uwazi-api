@@ -1,0 +1,181 @@
+{
+	"info": {
+		"_postman_id": "dc87750f-e3ec-405a-adc7-37b59005acf4",
+		"name": "uwazi-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2225896",
+		"_collection_link": "https://solar-meadow-948171.postman.co/workspace/uwazi~92e66936-432e-4434-98ff-2b92238ad095/collection/2225896-dc87750f-e3ec-405a-adc7-37b59005acf4?action=share&source=collection_link&creator=2225896"
+	},
+	"item": [
+		{
+			"name": "health-check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost/health",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"health"
+					]
+				},
+				"description": "Generated from cURL: curl --request GET \\\n  --url https://localhost/health"
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"admin@uwazi.com\",\n  \"password\": \"password\" \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost/auth/login",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				},
+				"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/login \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"email\": \"admin@uwazi.com\",\n  \"password\": \"password\" \n}'"
+			},
+			"response": []
+		},
+		{
+			"name": "register-hospital",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMzEzNzcxNCwianRpIjoiOTQ2ZmE0NDUtMGU2NC00MjFjLThjODMtOTlkZThiZTc4NzU4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IntcImlkXCI6IDEsIFwidXNlcl9uYW1lXCI6IFwiYWRtaW5cIiwgXCJmaXJzdF9uYW1lXCI6IFwiYWRtaW5cIiwgXCJsYXN0X25hbWVcIjogXCJhZG1pblwiLCBcImVtYWlsXCI6IFwiYWRtaW5AdXdhemkuY29tXCIsIFwib3JnX2lkXCI6IDEsIFwicm9sZV9pZFwiOiAyfSIsIm5iZiI6MTczMzEzNzcxNCwiZXhwIjoxNzMzMTM4NjE0fQ.Dvr2qA2eQrSrykzfKFY6Y2cgE8pUr96eixjSEg1hGWg"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\": \"hospital\",\n  \"name\": \"St. Luke's Hospital\",\n  \"email_address\": \"info@stlikeshospital.com\",\n  \"mobile_number\": \"+254712345678\",\n  \"head_quarter_location\": \"Nairobi, Kenya\",\n  \"kra_pin\": \"A123456789X99\",\n  \"hospital_category\": \"public\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost/auth/register/organisation",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"auth",
+						"register",
+						"organisation"
+					]
+				},
+				"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/register/organisation \\\n  --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMzEzNzcxNCwianRpIjoiOTQ2ZmE0NDUtMGU2NC00MjFjLThjODMtOTlkZThiZTc4NzU4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IntcImlkXCI6IDEsIFwidXNlcl9uYW1lXCI6IFwiYWRtaW5cIiwgXCJmaXJzdF9uYW1lXCI6IFwiYWRtaW5cIiwgXCJsYXN0X25hbWVcIjogXCJhZG1pblwiLCBcImVtYWlsXCI6IFwiYWRtaW5AdXdhemkuY29tXCIsIFwib3JnX2lkXCI6IDEsIFwicm9sZV9pZFwiOiAyfSIsIm5iZiI6MTczMzEzNzcxNCwiZXhwIjoxNzMzMTM4NjE0fQ.Dvr2qA2eQrSrykzfKFY6Y2cgE8pUr96eixjSEg1hGWg' \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"type\": \"hospital\",\n  \"name\": \"St. Luke'\\''s Hospital\",\n  \"email_address\": \"info@stlikeshospital.com\",\n  \"mobile_number\": \"+254712345678\",\n  \"head_quarter_location\": \"Nairobi, Kenya\",\n  \"kra_pin\": \"A123456789X99\",\n  \"hospital_category\": \"public\"\n}'"
+			},
+			"response": []
+		},
+		{
+			"name": "register-insurance-company",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMzEzNzcxNCwianRpIjoiOTQ2ZmE0NDUtMGU2NC00MjFjLThjODMtOTlkZThiZTc4NzU4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IntcImlkXCI6IDEsIFwidXNlcl9uYW1lXCI6IFwiYWRtaW5cIiwgXCJmaXJzdF9uYW1lXCI6IFwiYWRtaW5cIiwgXCJsYXN0X25hbWVcIjogXCJhZG1pblwiLCBcImVtYWlsXCI6IFwiYWRtaW5AdXdhemkuY29tXCIsIFwib3JnX2lkXCI6IDEsIFwicm9sZV9pZFwiOiAyfSIsIm5iZiI6MTczMzEzNzcxNCwiZXhwIjoxNzMzMTM4NjE0fQ.Dvr2qA2eQrSrykzfKFY6Y2cgE8pUr96eixjSEg1hGWg"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\": \"insurance\",\n  \"name\": \"Jubilee Insurance\",\n  \"email_address\": \"contact@jubileeinsurance.com\",\n  \"mobile_number\": \"0723456789\",\n  \"head_quarter_location\": \"Mombasa, Kenya\",\n  \"kra_pin\": \"B987654321Y\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost/auth/register/organisation",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"auth",
+						"register",
+						"organisation"
+					]
+				},
+				"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/register/organisation \\\n  --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMzEzNzcxNCwianRpIjoiOTQ2ZmE0NDUtMGU2NC00MjFjLThjODMtOTlkZThiZTc4NzU4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IntcImlkXCI6IDEsIFwidXNlcl9uYW1lXCI6IFwiYWRtaW5cIiwgXCJmaXJzdF9uYW1lXCI6IFwiYWRtaW5cIiwgXCJsYXN0X25hbWVcIjogXCJhZG1pblwiLCBcImVtYWlsXCI6IFwiYWRtaW5AdXdhemkuY29tXCIsIFwib3JnX2lkXCI6IDEsIFwicm9sZV9pZFwiOiAyfSIsIm5iZiI6MTczMzEzNzcxNCwiZXhwIjoxNzMzMTM4NjE0fQ.Dvr2qA2eQrSrykzfKFY6Y2cgE8pUr96eixjSEg1hGWg' \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"type\": \"insurance\",\n  \"name\": \"Jubilee Insurance\",\n  \"email_address\": \"contact@jubileeinsurance.com\",\n  \"mobile_number\": \"0723456789\",\n  \"head_quarter_location\": \"Mombasa, Kenya\",\n  \"kra_pin\": \"B987654321Y\"\n}'"
+			},
+			"response": []
+		},
+		{
+			"name": "register-user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMzEzNzcxNCwianRpIjoiOTQ2ZmE0NDUtMGU2NC00MjFjLThjODMtOTlkZThiZTc4NzU4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IntcImlkXCI6IDEsIFwidXNlcl9uYW1lXCI6IFwiYWRtaW5cIiwgXCJmaXJzdF9uYW1lXCI6IFwiYWRtaW5cIiwgXCJsYXN0X25hbWVcIjogXCJhZG1pblwiLCBcImVtYWlsXCI6IFwiYWRtaW5AdXdhemkuY29tXCIsIFwib3JnX2lkXCI6IDEsIFwicm9sZV9pZFwiOiAyfSIsIm5iZiI6MTczMzEzNzcxNCwiZXhwIjoxNzMzMTM4NjE0fQ.Dvr2qA2eQrSrykzfKFY6Y2cgE8pUr96eixjSEg1hGWg"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"user_name\": \"jmburu\",\n  \"first_name\": \"Johana\",\n  \"second_name\": \"Mbuguah\",\n  \"last_name\": \"Mburu\",\n  \"email\": \"johanambuguah@gmail.com\",\n  \"mobile_number\": \"+254723456789\",\n  \"org_id\": 1,\n  \"national_id\": \"12435678\",\n  \"gender\": \"female\",\n  \"dob\" : \"1995-01-01\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost/auth/register/user",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"auth",
+						"register",
+						"user"
+					]
+				},
+				"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/register/user \\\n  --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMzEzNzcxNCwianRpIjoiOTQ2ZmE0NDUtMGU2NC00MjFjLThjODMtOTlkZThiZTc4NzU4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IntcImlkXCI6IDEsIFwidXNlcl9uYW1lXCI6IFwiYWRtaW5cIiwgXCJmaXJzdF9uYW1lXCI6IFwiYWRtaW5cIiwgXCJsYXN0X25hbWVcIjogXCJhZG1pblwiLCBcImVtYWlsXCI6IFwiYWRtaW5AdXdhemkuY29tXCIsIFwib3JnX2lkXCI6IDEsIFwicm9sZV9pZFwiOiAyfSIsIm5iZiI6MTczMzEzNzcxNCwiZXhwIjoxNzMzMTM4NjE0fQ.Dvr2qA2eQrSrykzfKFY6Y2cgE8pUr96eixjSEg1hGWg' \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"user_name\": \"jmburu\",\n  \"first_name\": \"Johana\",\n  \"second_name\": \"Mbuguah\",\n  \"last_name\": \"Mburu\",\n  \"email\": \"johanambuguah@gmail.com\",\n  \"mobile_number\": \"+254723456789\",\n  \"org_id\": 1,\n  \"national_id\": \"12435678\",\n  \"gender\": \"female\",\n  \"dob\" : \"1995-01-01\"\n}'"
+			},
+			"response": []
+		}
+	]
+}
