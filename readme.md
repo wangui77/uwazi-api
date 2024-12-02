@@ -8,10 +8,14 @@ The Uwazi API helps hospital insurance providers verify if hospital insurance cl
 
 ### Steps:
 1. **Clone the Repository:**
+   - get the github url of the repository by clicking on the code button and copy the url
+   ![git-clone.png](./docs/images/git-clone.png)
    - Clone the branch to your local machine using the following command:
      ```bash
      git clone <github-url>
      ```
+
+     
 
 2. **Rename `.env.sample` to `.env`:**
    - Navigate to the root directory of the cloned repository.
@@ -179,6 +183,12 @@ The data seeded is defined in the `.env` or `.env.sample` file under the followi
 
 1. **Setup Postman Environment:**
    - Download the postman collection form this link: [Uwazi API Postman Collection Link](./docs/postman/uwazi-api.postman_collection.json)
+
+   - import the collection by clicking on the import button in postman
+   ![postman-import-collection.png](./docs/images/postman-import-collection.png)
+
+   - select the file you downloaded
+   ![postman-collection-file-select.png](./docs/images/postman-collection-file-select.png)
 
    - Setup pre request scripts for routes that require authentication.
    ![postman-pre-request-script.png](./docs/images/postman-pre-request-script.png)
