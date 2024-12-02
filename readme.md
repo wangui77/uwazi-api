@@ -122,28 +122,26 @@ The Uwazi API helps hospital insurance providers verify if hospital insurance cl
 
 
 ## 2. Running the Project
+The Uwazi API utilizes Docker for containerization, making it easy to set up and run the application.
+
+## Docker Services Overview
+`Docker` is a platform that allows you to containerize applications. A Docker container packages an application and its dependencies, ensuring it runs consistently across different environments.
+
+Advantages of Docker include:
+   - `Portability`: Applications run the same regardless of where they are deployed. 
+   - `Dependency Isolation`: Each container has its own isolated environment.
+   - `Simplified Deployment`: Applications can be easily started, stopped, and scaled using Docker.     |
 
 
-Docker is a platform that allows you to containerize applications. A Docker container packages an application and its dependencies, ensuring it runs consistently across different environments.
+`Docker Compose` is a tool that simplifies the management of multi-container Docker applications. With Docker Compose, you can define your application’s services, networks, and volumes in a single file (docker-compose.yml), making it easier to start, stop, and manage the entire system.
 
-| Feature                 | Explanation                                                                 |
-|-------------------------|-----------------------------------------------------------------------------|
-| Portability             | Applications run the same regardless of where they are deployed.          |
-| Dependency Isolation    | Each container has its own isolated environment.                          |
-| Simplified Deployment   | Applications can be easily started, stopped, and scaled using Docker.     |
+Advantages of Docker Compose include:
+ - `Multi-Container Setup`:	Allows you to manage multiple services (e.g., API, database, and proxy) as one application.
+-` Configuration in Code`:	All service definitions (e.g., ports, volumes, dependencies) are stored in a YAML file for easy reproducibility.
+- `Service Dependency Management`:	Automatically ensures services start in the correct order using depends_on.
+Scaling	You can scale services (e.g., multiple API instances) with a single command.
+- `Networking`:	Automatically sets up a private network for all services, enabling seamless communication.
 
-
-NGINX is a high-performance web server often used as a reverse proxy, load balancer, or HTTP cache. In this setup, it acts as a reverse proxy to handle incoming HTTP/HTTPS requests and forward them to the Flask API.
-
-| Feature                 | Explanation                                                                 |
-|-------------------------|-----------------------------------------------------------------------------|
-| Reverse Proxy           | Routes client requests to backend servers like Flask.                     |
-| HTTPS Support           | Provides SSL/TLS termination for secure connections.                      |
-| Load Balancing          | Distributes traffic across multiple backend servers (not used here).      |
-
----
-
-## Services Overview
 
 This setup uses three main services:
 
@@ -155,12 +153,12 @@ This setup uses three main services:
 
 ### Communication Between Services
 
-- **NGINX and API:** NGINX forwards incoming requests (e.g., `https://localhost`) to the Flask API running in the `api` container.
-- **API and Database:** The Flask application interacts with the PostgreSQL database to store and retrieve data. This communication happens within the Docker network.
+- **nginx service and api Service:** Nginx forwards incoming requests (e.g., `https://localhost`) to the Flask API running in the `api` container.
+- **api service and database service:** The Flask application interacts with the PostgreSQL database to store and retrieve data. This communication happens within the Docker network.
 
 ---
 
-### API Dockerfile
+### The Uwazi API Dockerfile
 
 ```dockerfile
    FROM python:3.9
@@ -185,8 +183,7 @@ This setup uses three main services:
 
 ---
 
-### **API Docker Compose Services:**
-#### **docker-compose.yml**
+### **The Uwazi API docker compose services:**
 ```yaml
 services:
   nginx:
@@ -231,7 +228,7 @@ volumes:
 
 ```
 
-#### **nginx**
+#### **Nginx service**
 
 | Line                                  | Explanation                                                                                       |
 |--------------------------------------|---------------------------------------------------------------------------------------------------|
@@ -241,7 +238,7 @@ volumes:
 | `volumes:`                           | Mounts files from the host to the container for NGINX configuration and SSL certificates.         |
 | `depends_on: - api`                  | Ensures that the `api` service starts before NGINX.                                              |
 
-#### **api**
+#### **API service**
 
 | Line                                  | Explanation                                                                                       |
 |--------------------------------------|---------------------------------------------------------------------------------------------------|
@@ -253,7 +250,7 @@ volumes:
 | `depends_on: - database`             | Ensures the database service starts before the API.                                              |
 | `command: flask run...`              | Starts the Flask application with live reloading enabled.                                        |
 
-#### **database**
+#### **Database service**
 
 | Line                                  | Explanation                                                                                       |
 |--------------------------------------|---------------------------------------------------------------------------------------------------|
@@ -271,8 +268,16 @@ volumes:
 
 ---
 
-### API NGINX Configuration
-#### **config/nginx/nginx.conf**
+### Nginx Configuration
+Nginx is a high-performance web server often used as a reverse proxy, load balancer, or HTTP cache. In this setup, it acts as a reverse proxy to handle incoming HTTP/HTTPS requests and forward them to the Flask API.
+
+| Feature                 | Explanation                                                                 |
+|-------------------------|-----------------------------------------------------------------------------|
+| Reverse Proxy           | Routes client requests to backend servers like Flask.                     |
+| HTTPS Support           | Provides SSL/TLS termination for secure connections.                      |
+| Load Balancing          | Distributes traffic across multiple backend servers (not used here).      |
+
+The Nginx configuration file (`config/nginx/nginx.conf`) is structured as follows:
 
 ```nginx
 # Main NGINX configuration file
