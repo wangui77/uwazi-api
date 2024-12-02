@@ -123,6 +123,241 @@ The Uwazi API helps hospital insurance providers verify if hospital insurance cl
 
 ## 2. Running the Project
 
+
+Docker is a platform that allows you to containerize applications. A Docker container packages an application and its dependencies, ensuring it runs consistently across different environments.
+
+| Feature                 | Explanation                                                                 |
+|-------------------------|-----------------------------------------------------------------------------|
+| Portability             | Applications run the same regardless of where they are deployed.          |
+| Dependency Isolation    | Each container has its own isolated environment.                          |
+| Simplified Deployment   | Applications can be easily started, stopped, and scaled using Docker.     |
+
+
+NGINX is a high-performance web server often used as a reverse proxy, load balancer, or HTTP cache. In this setup, it acts as a reverse proxy to handle incoming HTTP/HTTPS requests and forward them to the Flask API.
+
+| Feature                 | Explanation                                                                 |
+|-------------------------|-----------------------------------------------------------------------------|
+| Reverse Proxy           | Routes client requests to backend servers like Flask.                     |
+| HTTPS Support           | Provides SSL/TLS termination for secure connections.                      |
+| Load Balancing          | Distributes traffic across multiple backend servers (not used here).      |
+
+---
+
+## Services Overview
+
+This setup uses three main services:
+
+| Service   | Description                                                                                       |
+|-----------|---------------------------------------------------------------------------------------------------|
+| `nginx`   | Acts as the reverse proxy, handling HTTP and HTTPS traffic.                                       |
+| `api`     | Runs the Flask application that serves the Uwazi API.                                             |
+| `database`| Provides the PostgreSQL database for storing application data.                                    |
+
+### Communication Between Services
+
+- **NGINX and API:** NGINX forwards incoming requests (e.g., `https://localhost`) to the Flask API running in the `api` container.
+- **API and Database:** The Flask application interacts with the PostgreSQL database to store and retrieve data. This communication happens within the Docker network.
+
+---
+
+### API Dockerfile
+
+```dockerfile
+   FROM python:3.9
+
+   WORKDIR /app
+
+   # Install dependencies
+   COPY requirements.txt requirements.txt
+   RUN pip install -r requirements.txt
+
+   # Copy application code
+   COPY . .
+```
+
+| Line                                | Explanation                                                                                       |
+|------------------------------------|---------------------------------------------------------------------------------------------------|
+| `FROM python:3.9`                  | Specifies the base image for the Docker container, which includes Python version 3.9.            |
+| `WORKDIR /app`                     | Sets the working directory inside the container to `/app`.                                       |
+| `COPY requirements.txt requirements.txt` | Copies the `requirements.txt` file from the host to the container.                              |
+| `RUN pip install -r requirements.txt` | Installs all dependencies listed in the `requirements.txt` file using `pip`.                     |
+| `COPY . .`                         | Copies the entire project directory from the host to the container.                              |
+
+---
+
+### **API Docker Compose Services:**
+#### **docker-compose.yml**
+```yaml
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf  # Nginx configuration
+      - ./config/nginx/certs:/etc/nginx/certs:ro         # SSL certificates (read-only)
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: .
+    container_name: api
+    env_file:
+      - .env
+    ports:
+      - "${FLASK_PORT}:${FLASK_PORT}"
+    volumes:
+      - .:/app  # Mount current directory to container
+    depends_on:
+      - database
+    command: >
+      sh -c "flask run --host=0.0.0.0 --port=${FLASK_PORT} --reload"\
+       
+  database:
+    image: postgres:latest
+    container_name: database
+    env_file:
+      - .env
+    ports:
+      - "${POSTGRES_PORT}:5432"  # Default PostgreSQL port
+    volumes:
+      - database-data:/var/lib/postgresql/data  # Persistent storage for PostgreSQL data
+
+volumes:
+  database-data:
+
+```
+
+#### **nginx**
+
+| Line                                  | Explanation                                                                                       |
+|--------------------------------------|---------------------------------------------------------------------------------------------------|
+| `image: nginx:latest`                | Specifies that the latest NGINX image will be used for this service.                             |
+| `container_name: nginx`              | Sets the name of the container to `nginx`.                                                       |
+| `ports:`                             | Maps ports between the host and container for HTTP (80) and HTTPS (443).                         |
+| `volumes:`                           | Mounts files from the host to the container for NGINX configuration and SSL certificates.         |
+| `depends_on: - api`                  | Ensures that the `api` service starts before NGINX.                                              |
+
+#### **api**
+
+| Line                                  | Explanation                                                                                       |
+|--------------------------------------|---------------------------------------------------------------------------------------------------|
+| `build: context: .`                  | Builds the API container using the current directory as the context.                             |
+| `container_name: api`                | Sets the container name to `api`.                                                                |
+| `env_file: - .env`                   | Loads environment variables from the `.env` file.                                                |
+| `ports:`                             | Maps the Flask application port to the host.                                                     |
+| `volumes:`                           | Mounts the current project directory to the container for live updates.                          |
+| `depends_on: - database`             | Ensures the database service starts before the API.                                              |
+| `command: flask run...`              | Starts the Flask application with live reloading enabled.                                        |
+
+#### **database**
+
+| Line                                  | Explanation                                                                                       |
+|--------------------------------------|---------------------------------------------------------------------------------------------------|
+| `image: postgres:latest`             | Specifies the latest PostgreSQL image for the database service.                                  |
+| `container_name: database`           | Names the container `database`.                                                                  |
+| `env_file: - .env`                   | Loads database-specific environment variables from the `.env` file.                              |
+| `ports: ${POSTGRES_PORT}:5432`       | Maps the host database port to the default PostgreSQL port in the container.                     |
+| `volumes: database-data:/var/lib/postgresql/data` | Ensures database data persists even if the container is stopped.                                |
+
+#### **volumes**
+
+| Line                                  | Explanation                                                                                       |
+|--------------------------------------|---------------------------------------------------------------------------------------------------|
+| `database-data:`                     | Declares a volume for persistent database storage.                                               |
+
+---
+
+### API NGINX Configuration
+#### **config/nginx/nginx.conf**
+
+```nginx
+# Main NGINX configuration file
+events {
+    # Worker connections
+    worker_connections 1024;
+}
+
+http {
+    # Redirect HTTP to HTTPS
+    server {
+        listen 80;
+        server_name localhost;
+
+        # Redirect all HTTP requests to HTTPS
+        return 301 https://$host$request_uri;
+    }
+
+    # HTTPS server block
+    server {
+        listen 443 ssl;
+        server_name localhost;
+
+        # SSL certificate and key
+        ssl_certificate /etc/nginx/certs/localhost.pem;
+        ssl_certificate_key /etc/nginx/certs/localhost-key.pem;
+
+        # SSL protocols
+        ssl_protocols TLSv1.2 TLSv1.3;
+
+        # SSL ciphers
+        ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256';
+        ssl_prefer_server_ciphers on;
+
+        # SSL session settings
+        ssl_session_cache shared:SSL:10m;
+        ssl_session_timeout 10m;
+
+        # Security headers
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+        add_header X-Content-Type-Options nosniff;
+        add_header X-Frame-Options DENY;
+        add_header X-XSS-Protection "1; mode=block";
+
+        # Reverse proxy to Flask
+        location / {
+            proxy_pass http://api:8080;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_buffering off;
+        }
+    }
+}
+
+```
+
+| Section                               | Explanation                                                                                       |
+|--------------------------------------|---------------------------------------------------------------------------------------------------|
+| `events`                              | Defines global settings for NGINX worker connections.                                            |
+| `worker_connections 1024;`           | Sets the maximum number of simultaneous connections NGINX can handle.                            |
+
+#### HTTP Block
+
+| Line                                  | Explanation                                                                                       |
+|--------------------------------------|---------------------------------------------------------------------------------------------------|
+| `listen 80;`                         | Configures NGINX to listen on port 80 for HTTP traffic.                                           |
+| `server_name localhost;`             | Defines the server name as `localhost`.                                                          |
+| `return 301 https://$host$request_uri;` | Redirects all HTTP traffic to HTTPS.                                                             |
+
+#### HTTPS Server Block
+
+| Line                                  | Explanation                                                                                       |
+|--------------------------------------|---------------------------------------------------------------------------------------------------|
+| `listen 443 ssl;`                    | Configures NGINX to listen on port 443 for HTTPS traffic.                                         |
+| `ssl_certificate /etc/nginx/certs/localhost.pem;` | Specifies the SSL certificate for HTTPS.                                                       |
+| `ssl_certificate_key /etc/nginx/certs/localhost-key.pem;` | Specifies the SSL certificate key for HTTPS.                                               |
+| `ssl_protocols TLSv1.2 TLSv1.3;`     | Defines the supported SSL protocols.                                                             |
+| `add_header Strict-Transport-Security...` | Adds security headers to enforce best practices for HTTPS connections.                          |
+| `proxy_pass http://api:8080;`        | Forwards all incoming requests to the Flask API running on port 8080.                            |
+| `proxy_set_header Host $host;`       | Passes the original `Host` header to the proxied server.                                          |
+
+---
+
 ### Starting the Project with docker compose
 ---
 1. **Build and Start Containers:**
@@ -178,16 +413,16 @@ The data seeded is defined in the `.env` or `.env.sample` file under the followi
 
 ---
 
-## Using Postman to Test the API
+## 3. Using Postman to Test the API
 ---
 
 1. **Setup Postman Environment:**
    - Download the postman collection form this link: [Uwazi API Postman Collection Link](./docs/postman/uwazi-api.postman_collection.json)
 
-   - import the collection by clicking on the import button in postman
+   - import the collection by clicking on the import button on thein postman
    ![postman-import-collection.png](./docs/images/postman-import-collection.png)
 
-   - select the file you downloaded
+   - This brings up a modal where you can select the postman collection file you downloaded
    ![postman-collection-file-select.png](./docs/images/postman-collection-file-select.png)
 
    - Setup pre request scripts for routes that require authentication.
