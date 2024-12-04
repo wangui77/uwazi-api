@@ -624,10 +624,80 @@
 							"response": []
 						},
 						{
-							"name": "pre-authorize-customer",
+							"name": "pre-authorise",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({\r",
+											"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint\r",
+											"    method: 'POST',\r",
+											"    header: {\r",
+											"        'Content-Type': 'application/json',\r",
+											"    },\r",
+											"    body: {\r",
+											"        mode: 'raw',\r",
+											"        raw: JSON.stringify({\r",
+											"            \"email\": \"jmburu.works@gmail.com\",\r",
+											"            \"password\": \"FSvCWIbKtqYA\" \r",
+											"        })\r",
+											"    }\r",
+											"}, function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.log('Error during login:', err);\r",
+											"    } else {\r",
+											"        // Extract the token from the response and store it in an environment variable\r",
+											"        const token = response.json().access_token; // Adjust based on your API response\r",
+											"        pm.environment.set('authToken', token);\r",
+											"    }\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
+								"auth": {
+									"type": "noauth"
+								},
 								"method": "POST",
-								"header": []
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{authToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"customer_id\": 5\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost/api/v1/insurance/pre-auth",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"api",
+										"v1",
+										"insurance",
+										"pre-auth"
+									]
+								},
+								"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/login \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"email\": \"admin@uwazi.com\",\n  \"password\": \"password\" \n}'"
 							},
 							"response": []
 						},
@@ -683,7 +753,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"invoice_number\": \"INV8910\",\n    \"invoice_amount\": 10,\n    \"treatment_id\": 1,\n    \"customer_id\": 5,\n    \"hospital_id\": 2,\n    \"insured_id\": 3,\n    \"claim_narration\": \"Emergency procedure due to an accident.\"\n}",
+									"raw": "{\n    \"invoice_number\": \"INV8911\",\n    \"invoice_amount\": 15000,\n    \"treatment_id\": 1,\n    \"customer_id\": 5,\n    \"hospital_id\": 2,\n    \"insured_id\": 3,\n    \"claim_narration\": \"Emergency procedure due to an accident.\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -691,7 +761,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://localhost/api/v1/claims",
+									"raw": "https://localhost/api/v1/insurance/claims",
 									"protocol": "https",
 									"host": [
 										"localhost"
@@ -699,6 +769,7 @@
 									"path": [
 										"api",
 										"v1",
+										"insurance",
 										"claims"
 									]
 								}
@@ -758,7 +829,7 @@
 									}
 								],
 								"url": {
-									"raw": "https://localhost/api/v1/claims",
+									"raw": "https://localhost/api/v1/insurance/claims",
 									"protocol": "https",
 									"host": [
 										"localhost"
@@ -766,6 +837,7 @@
 									"path": [
 										"api",
 										"v1",
+										"insurance",
 										"claims"
 									]
 								},
@@ -1022,7 +1094,7 @@
 									}
 								],
 								"url": {
-									"raw": "https://localhost/api/v1/claims",
+									"raw": "https://localhost/api/v1/insurance/claims",
 									"protocol": "https",
 									"host": [
 										"localhost"
@@ -1030,6 +1102,7 @@
 									"path": [
 										"api",
 										"v1",
+										"insurance",
 										"claims"
 									]
 								},
@@ -1091,7 +1164,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"insurer_id\":3,\n    \"claim_id\": 1,\n    \"status\": \"approved\",\n    \"remarks\": \"Claim is valid!\"\n}",
+									"raw": "{\n    \"insurer_id\":3,\n    \"claim_id\": 2,\n    \"status\": \"approved\",\n    \"remarks\": \"Claim is valid!\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1099,7 +1172,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://localhost/api/v1/claims",
+									"raw": "https://localhost/api/v1/insurance/claims",
 									"protocol": "https",
 									"host": [
 										"localhost"
@@ -1107,6 +1180,7 @@
 									"path": [
 										"api",
 										"v1",
+										"insurance",
 										"claims"
 									]
 								},
@@ -1208,7 +1282,7 @@
 									}
 								],
 								"url": {
-									"raw": "https://localhost/api/v1/claims",
+									"raw": "https://localhost/api/v1/insurance/claims",
 									"protocol": "https",
 									"host": [
 										"localhost"
@@ -1216,6 +1290,7 @@
 									"path": [
 										"api",
 										"v1",
+										"insurance",
 										"claims"
 									]
 								},

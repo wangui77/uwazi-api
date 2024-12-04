@@ -17,7 +17,7 @@ from utils.auth import generate_strong_password
 from utils.email import send_password_email
 
 
-class ClaimsService:
+class InsuranceService:
     def __init__(self):
         self.valid_status_codes = {
             "00": "Pending",
@@ -45,6 +45,105 @@ class ClaimsService:
 
         # Return None if the status is invalid
         return None, None
+
+    # ==================================
+    #
+    #  Pre-authorisation
+    #
+    # =================================
+    def can_pre_authorise_claims(self, token):
+        claims = jwt_service.decode_identity(token)
+        organisation = Organisation.query.get(claims["org_id"])
+        role = Role.query.get(claims["role_id"])
+        user = User.query.get(claims["id"])
+
+        if not organisation or organisation.type != "hospital":
+            return False, {"error": "You must belong to a hospital organisation to create a claim"}
+
+        if not role or role.role_code != "admin":
+            return False, {"error": "You must be an admin to create a claim"}
+
+        return True, {"user_name": user.user_name, "org_id": organisation.id, "hospital_category": organisation.hospital_category}
+
+    def get_policy_details(self, customer_id):
+
+        # validate that the customer_id is a valid user
+        user = User.query.get(customer_id)
+        if not user:
+            return {"error": "Customer does not exist"}, 404
+
+        # Validate that the customer is an insurance customer
+        customer_role_id = user.role_id
+        customer_org_id = user.org_id
+        user_role_code = Role.query.get(customer_role_id).role_code
+        customer_organisation = Organisation.query.get(customer_org_id)
+        customer_organisation_type = customer_organisation.type
+        customer_is_active = user.status_code == "01"
+
+        if not customer_organisation:
+            return False, {"error": "Customers insurer organisation does not exist"}, 404
+
+        if not customer_organisation_type == "insurance":
+            return False, {"error": "Customer is not registered under an insurer"}, 400
+
+        if not user_role_code == "user":
+            return False, {"error": "Customer is not an insurance customer"}, 400
+
+        if not customer_is_active:
+            return False, {"error": "Customer is not active"}, 400
+
+        # Get the user policy
+        policy = Policy.query.filter_by(user_id=customer_id).first()
+        if not policy:
+            return False, {"error": "Customer does not have a policy"}, 404
+
+        # Check if the policy is expired
+        policy_end_date = policy.policy_end_date
+        is_expired = policy_end_date < datetime.utcnow().date()
+        if is_expired:
+            return False, {"error": "Customers insurance Policy is expired"}, 400
+
+        # Return the policy details
+        response = {
+            "policy_number": policy.policy_number,
+            "remaining_limit": policy.remaining_limit,
+            "insurer_name": customer_organisation.name,
+            "is_expired": is_expired,
+
+        }
+
+        return True, response, 200
+
+    def pre_authorisation(self, request):
+        # Extract data from the request
+        data = request.get_json()
+        customer_id = data.get("customer_id")
+
+        if not customer_id:
+            return {"error": "Missing customer_id"}, 400
+
+        # Ensure the user is logged in
+        token = jwt_service.get_token_from_request(request)
+        if not token:
+            return {"error": "Unauthorized", "message": "Missing token"}, 401
+
+        can_pre_authorise_claims, user_data = self.can_pre_authorise_claims(
+            token)
+        if not can_pre_authorise_claims:
+            return {'error': 'Only a hospital admin can pre-authorise claims'}, 401
+
+        print(f"User data: {user_data}", flush=True)
+
+        # get the policy details
+        _is_valid, response, status_code = self.get_policy_details(customer_id)
+
+        return response, status_code
+
+    # ==================================
+    #
+    #  Claims
+    #
+    # =================================
 
     def can_create_claim(self, token):
         """Check if the user is an admin of a hospital organisation."""
@@ -138,9 +237,19 @@ class ClaimsService:
 
         # Validate that the user exists
         user = User.query.get(customer_id)
-
         if not user:
             return {"error": f"User with ID '{customer_id}' not found"}, 404
+
+        # validate the users policy details
+        is_valid, policy_details_or_error, status_code = self.get_policy_details(
+            customer_id)
+        if not is_valid:
+            return policy_details_or_error, status_code
+
+        # Validate that the user can afford to pay the claim from their insurance
+        remaining_limit = policy_details_or_error["remaining_limit"]
+        if invoice_amount > remaining_limit:
+            return {"error": "Insufficient funds to pay the claim"}, 400
 
         # Check if the claim already exists
         existing_claim = Claim.query.filter_by(
@@ -339,6 +448,12 @@ class ClaimsService:
             claim.date_approved = datetime.utcnow()
             claim.approved_by = user_data["user_name"]
 
+            # reduce the users limit
+            policy = Policy.query.filter_by(
+                policy_number=claim.policy_number).first()
+
+            policy.remaining_limit -= claim.invoice_amount
+
         # Save the changes to the database
         try:
             db.session.commit()
@@ -358,4 +473,4 @@ class ClaimsService:
             return {"error": "An error occurred while saving the claim. Please try again later."}, 500
 
 
-claims_service = ClaimsService()
+insurance_service = InsuranceService()

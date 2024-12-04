@@ -3,7 +3,7 @@ from flask_jwt_extended import set_access_cookies, set_refresh_cookies
 
 from models.organisation import Organisation
 from models.role import Role
-from services.claims_service import claims_service
+from services.insurance_service import insurance_service
 from services.jwt_service import jwt_service
 from services.registration_service import registration_service
 from services.treatment_service import treatment_service
@@ -189,22 +189,28 @@ def treatment_routes(app):
         return response, response_code
 
 
-def claims_routes(app):
-    @app.route(create_route_with_prefix("/claims"), methods=["POST"])
+def insurance_service_routes(app):
+    @app.route(create_route_with_prefix("/insurance/pre-auth"), methods=["POST"])
+    def pre_authorisation():
+        response, response_code = insurance_service.pre_authorisation(
+            request)
+        return response, response_code
+
+    @app.route(create_route_with_prefix("/insurance/claims"), methods=["POST"])
     def create_claim():
-        response, response_code = claims_service.create_claim(
+        response, response_code = insurance_service.create_claim(
             request)
         return response, response_code
 
-    @app.route(create_route_with_prefix("/claims"), methods=["GET"])
+    @app.route(create_route_with_prefix("/insurance/claims"), methods=["GET"])
     def get_claims():
-        response, response_code = claims_service.get_claims(
+        response, response_code = insurance_service.get_claims(
             request)
         return response, response_code
 
-    @app.route(create_route_with_prefix("/claims"), methods=["PATCH"])
+    @app.route(create_route_with_prefix("/insurance/claims"), methods=["PATCH"])
     def update_claim():
-        response, response_code = claims_service.update_claim(
+        response, response_code = insurance_service.update_claim(
             request)
         return response, response_code
 
@@ -212,5 +218,5 @@ def claims_routes(app):
 def register_routes(app):
     auth_routes(app)
     general_routes(app)
-    claims_routes(app)
+    insurance_service_routes(app)
     treatment_routes(app)

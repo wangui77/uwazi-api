@@ -32,8 +32,6 @@ class JWTService:
         elif "access_token" in request.cookies:
             token = request.cookies.get("access_token")
 
-        print(f"Token from request: {token}", flush=True)
-
         return token
 
     # Generation and storage
@@ -125,8 +123,6 @@ class JWTService:
         if not decoded_claims:
             return False, "Token expired or invalid"
 
-        print(f"decoded_claims: {decoded_claims}")
-
         user_id = decoded_claims["id"]
 
         # Verify the token
@@ -170,7 +166,6 @@ class JWTService:
 
             return identity
         except Exception as e:
-            print(token, flush=True)
             print(f"Error decoding token: {e}", flush=True)
             # Handle token verification or decoding errors
             return None
