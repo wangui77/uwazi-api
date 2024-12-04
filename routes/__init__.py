@@ -63,6 +63,7 @@ def auth_routes(app):
             "first_name": user.first_name,
             "last_name": user.last_name,
             "email": user.email,
+            "user_id": user.id,
             "org_id": user.org_id,
             "role_id": user.role_id
         }
@@ -82,7 +83,16 @@ def auth_routes(app):
             expires_in_minutes=7 * 24 * 60
         )
 
-        # Set the tokens in the response cookies and response body
+        # Set the access and refresh tokens in the response cookies
+        cookie_response = jsonify({
+            "access_token": access_token,
+            "refresh_token": refresh_token
+        })
+
+        set_access_cookies(cookie_response, access_token)
+        set_refresh_cookies(cookie_response, refresh_token)
+
+        # return the response
         organisation = Organisation.query.get(user.org_id)
         role_code = Role.query.get(user.role_id).role_code
 
@@ -100,14 +110,11 @@ def auth_routes(app):
                     "role": role_code,
                 },
             },
-            "tokens": {
-                "access_token": access_token,
-                "refresh_token": refresh_token,
-            },
-        }
 
-        set_access_cookies(jsonify(response), access_token)
-        set_refresh_cookies(jsonify(response), refresh_token)
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+
+        }
 
         return response, 200
 

@@ -314,7 +314,7 @@ class ClaimsService:
             return {"error": "Invalid organisation"}, 400
 
         can_fetch_or_update_claims, user_data = self.can_fetch_or_update_claims(
-            token, org_id)
+            token)
         if not can_fetch_or_update_claims:
             return user_data, 401
 
