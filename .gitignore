@@ -166,3 +166,5 @@ cython_debug/
 .env
 
 config/nginx/certs/*
+!config/nginx/certs/
+!config/nginx/certs/.keep

@@ -82,14 +82,21 @@ The Uwazi API empowers insurance providers by streamlining the verification of h
 
 ### Setting Up mkcert for HTTPS
 1. **Install mkcert:**
-   - Download and install `mkcert` from the [mkcert GitHub repository](https://github.com/FiloSottile/mkcert).
+   - Download and install `mkcert` from the [mkcert GitHub repository](https://github.com/FiloSottile/mkcert). Follow the instructions for your environment
+
+> **Note**: 
+> For windows environments, run all mkcert commands from command prompt or powershell as administrator
 
 2. **Generate Localhost Certificates:**
-   - Run the following commands to generate certificates:
-     ```bash
+   - Run the following command to install the certicifate authority:
+   ```bash
      mkcert -install
-     mkcert localhost
-     ```
+   ```
+
+   - Run the following command to generate the trusted localhost certicifates in the config/nginx/certs directory:
+   ```bash
+     cd <project-directory>/config/nginx/certs && mkcert localhost
+   ```
 
 3. **Copy Certificates:**
    - Copy the generated `localhost-key.pem` and `localhost.pem` files to the `config/nginx/certs` directory.
