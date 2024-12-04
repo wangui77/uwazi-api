@@ -260,7 +260,7 @@ class RegistrationService:
             email_address=data["email_address"],
             mobile_number=data["mobile_number"],
             hospital_category=data.get("hospital_category"),
-            status_code="01",
+            status_code="02",
             status_description="Active",
             created_by=admin_data["user_name"],
             approved_by=admin_data["user_name"],
@@ -342,13 +342,11 @@ class RegistrationService:
             org_id=data["org_id"],
             created_by=admin_data_or_error["user_name"],
             approved_by=admin_data_or_error["user_name"],
-            status_code="01",
+            status_code="02",
             status_description="Active",
         )
 
         try:
-            db.session.add(new_user)
-            db.session.commit()
 
             print(f"New user created: {new_user.user_name}")
             print(f"Password: {random_password}")
@@ -356,8 +354,13 @@ class RegistrationService:
             email_sent_successfully = send_password_email(
                 new_user.email,
                 new_user.user_name,
-                random_password
+                random_password,
+                role_name,
+                organisation.name
             )
+
+            db.session.add(new_user)
+            db.session.commit()
 
             return {
                 "message": "User created successfully",
@@ -465,7 +468,10 @@ class RegistrationService:
             email_sent_successfully = send_password_email(
                 insurance_customer.email,
                 insurance_customer.user_name,
-                random_password
+                random_password,
+                role_name,
+                organisation.name,
+
             )
 
             return {

@@ -156,7 +156,9 @@ def auth_routes(app):
         set_refresh_cookies(response, refresh_token)
         return response, 200
 
-    @app.route(create_route_with_prefix("/auth/register/<registration_type>"), methods=["POST"])
+
+def registration_routes(app):
+    @app.route(create_route_with_prefix("/register/<registration_type>"), methods=["POST"])
     def register(registration_type):
         registration_type = registration_type.lower()
         data = request.json
@@ -223,6 +225,7 @@ def insurance_service_routes(app):
 
 def register_routes(app):
     auth_routes(app)
+    registration_routes(app)
     general_routes(app)
     insurance_service_routes(app)
     treatment_routes(app)

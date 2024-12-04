@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "48bd4535-dd81-4503-9de4-313165328125",
+		"_postman_id": "5d59d388-e280-4cce-b076-f359d57b2866",
 		"name": "uwazi-api",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "2225896",
-		"_collection_link": "https://solar-meadow-948171.postman.co/workspace/Test~21c5964c-3134-449f-aaba-3beb2393ad11/collection/2225896-48bd4535-dd81-4503-9de4-313165328125?action=share&source=collection_link&creator=2225896"
+		"_collection_link": "https://solar-meadow-948171.postman.co/workspace/uwazi~92e66936-432e-4434-98ff-2b92238ad095/collection/2225896-5d59d388-e280-4cce-b076-f359d57b2866?action=share&source=collection_link&creator=2225896"
 	},
 	"item": [
 		{
@@ -71,7 +71,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://localhost/api/v1/auth/register/organisation",
+									"raw": "https://localhost/api/v1/register/organisation",
 									"protocol": "https",
 									"host": [
 										"localhost"
@@ -79,7 +79,6 @@
 									"path": [
 										"api",
 										"v1",
-										"auth",
 										"register",
 										"organisation"
 									]
@@ -146,7 +145,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://localhost/api/v1/auth/register/organisation",
+									"raw": "https://localhost/api/v1/register/organisation",
 									"protocol": "https",
 									"host": [
 										"localhost"
@@ -154,87 +153,11 @@
 									"path": [
 										"api",
 										"v1",
-										"auth",
 										"register",
 										"organisation"
 									]
 								},
 								"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/register/organisation \\\n  --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMzEzNzcxNCwianRpIjoiOTQ2ZmE0NDUtMGU2NC00MjFjLThjODMtOTlkZThiZTc4NzU4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IntcImlkXCI6IDEsIFwidXNlcl9uYW1lXCI6IFwiYWRtaW5cIiwgXCJmaXJzdF9uYW1lXCI6IFwiYWRtaW5cIiwgXCJsYXN0X25hbWVcIjogXCJhZG1pblwiLCBcImVtYWlsXCI6IFwiYWRtaW5AdXdhemkuY29tXCIsIFwib3JnX2lkXCI6IDEsIFwicm9sZV9pZFwiOiAyfSIsIm5iZiI6MTczMzEzNzcxNCwiZXhwIjoxNzMzMTM4NjE0fQ.Dvr2qA2eQrSrykzfKFY6Y2cgE8pUr96eixjSEg1hGWg' \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"type\": \"insurance\",\n  \"name\": \"Jubilee Insurance\",\n  \"email_address\": \"contact@jubileeinsurance.com\",\n  \"mobile_number\": \"0723456789\",\n  \"head_quarter_location\": \"Mombasa, Kenya\",\n  \"kra_pin\": \"B987654321Y\"\n}'"
-							},
-							"response": []
-						},
-						{
-							"name": "register-super-admin",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"pm.sendRequest({",
-											"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint",
-											"    method: 'POST',",
-											"    header: {",
-											"        'Content-Type': 'application/json',",
-											"    },",
-											"    body: {",
-											"        mode: 'raw',",
-											"        raw: JSON.stringify({",
-											"            email: 'admin@uwazi.com', // Replace with a valid email",
-											"            password: 'password'      // Replace with a valid password",
-											"        })",
-											"    }",
-											"}, function (err, response) {",
-											"    if (err) {",
-											"        console.log('Error during login:', err);",
-											"    } else {",
-											"        // Extract the token from the response and store it in an environment variable",
-											"        const token = response.json().access_token; // Adjust based on your API response",
-											"        pm.environment.set('authToken', token);",
-											"    }",
-											"});",
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "Bearer {{authToken}}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"user_name\": \"jmburu\",\n  \"first_name\": \"Johana\",\n  \"second_name\": \"Mbuguah\",\n  \"last_name\": \"Mburu\",\n  \"email\": \"johanambuguah@gmail.com\",\n  \"mobile_number\": \"+254723456789\",\n  \"org_id\": 1,\n  \"national_id\": \"12435678\",\n  \"gender\": \"female\",\n  \"dob\" : \"1995-01-01\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://localhost/api/v1/auth/register/user",
-									"protocol": "https",
-									"host": [
-										"localhost"
-									],
-									"path": [
-										"api",
-										"v1",
-										"auth",
-										"register",
-										"user"
-									]
-								},
-								"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/register/user \\\n  --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMzEzNzcxNCwianRpIjoiOTQ2ZmE0NDUtMGU2NC00MjFjLThjODMtOTlkZThiZTc4NzU4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IntcImlkXCI6IDEsIFwidXNlcl9uYW1lXCI6IFwiYWRtaW5cIiwgXCJmaXJzdF9uYW1lXCI6IFwiYWRtaW5cIiwgXCJsYXN0X25hbWVcIjogXCJhZG1pblwiLCBcImVtYWlsXCI6IFwiYWRtaW5AdXdhemkuY29tXCIsIFwib3JnX2lkXCI6IDEsIFwicm9sZV9pZFwiOiAyfSIsIm5iZiI6MTczMzEzNzcxNCwiZXhwIjoxNzMzMTM4NjE0fQ.Dvr2qA2eQrSrykzfKFY6Y2cgE8pUr96eixjSEg1hGWg' \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"user_name\": \"jmburu\",\n  \"first_name\": \"Johana\",\n  \"second_name\": \"Mbuguah\",\n  \"last_name\": \"Mburu\",\n  \"email\": \"johanambuguah@gmail.com\",\n  \"mobile_number\": \"+254723456789\",\n  \"org_id\": 1,\n  \"national_id\": \"12435678\",\n  \"gender\": \"female\",\n  \"dob\" : \"1995-01-01\"\n}'"
 							},
 							"response": []
 						},
@@ -296,7 +219,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://localhost/api/v1/auth/register/user",
+									"raw": "https://localhost/api/v1/register/user",
 									"protocol": "https",
 									"host": [
 										"localhost"
@@ -304,7 +227,6 @@
 									"path": [
 										"api",
 										"v1",
-										"auth",
 										"register",
 										"user"
 									]
@@ -371,7 +293,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://localhost/api/v1/auth/register/user",
+									"raw": "https://localhost/api/v1/register/user",
 									"protocol": "https",
 									"host": [
 										"localhost"
@@ -379,7 +301,80 @@
 									"path": [
 										"api",
 										"v1",
-										"auth",
+										"register",
+										"user"
+									]
+								},
+								"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/register/user \\\n  --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMzEzNzcxNCwianRpIjoiOTQ2ZmE0NDUtMGU2NC00MjFjLThjODMtOTlkZThiZTc4NzU4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IntcImlkXCI6IDEsIFwidXNlcl9uYW1lXCI6IFwiYWRtaW5cIiwgXCJmaXJzdF9uYW1lXCI6IFwiYWRtaW5cIiwgXCJsYXN0X25hbWVcIjogXCJhZG1pblwiLCBcImVtYWlsXCI6IFwiYWRtaW5AdXdhemkuY29tXCIsIFwib3JnX2lkXCI6IDEsIFwicm9sZV9pZFwiOiAyfSIsIm5iZiI6MTczMzEzNzcxNCwiZXhwIjoxNzMzMTM4NjE0fQ.Dvr2qA2eQrSrykzfKFY6Y2cgE8pUr96eixjSEg1hGWg' \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"user_name\": \"jmburu\",\n  \"first_name\": \"Johana\",\n  \"second_name\": \"Mbuguah\",\n  \"last_name\": \"Mburu\",\n  \"email\": \"johanambuguah@gmail.com\",\n  \"mobile_number\": \"+254723456789\",\n  \"org_id\": 1,\n  \"national_id\": \"12435678\",\n  \"gender\": \"female\",\n  \"dob\" : \"1995-01-01\"\n}'"
+							},
+							"response": []
+						},
+						{
+							"name": "register-uwazi-admin",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({",
+											"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint",
+											"    method: 'POST',",
+											"    header: {",
+											"        'Content-Type': 'application/json',",
+											"    },",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw: JSON.stringify({",
+											"            email: 'admin@uwazi.com', // Replace with a valid email",
+											"            password: 'password'      // Replace with a valid password",
+											"        })",
+											"    }",
+											"}, function (err, response) {",
+											"    if (err) {",
+											"        console.log('Error during login:', err);",
+											"    } else {",
+											"        // Extract the token from the response and store it in an environment variable",
+											"        const token = response.json().access_token; // Adjust based on your API response",
+											"        pm.environment.set('authToken', token);",
+											"    }",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{authToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"user_name\": \"jmburu\",\n  \"first_name\": \"Johana\",\n  \"second_name\": \"Mbuguah\",\n  \"last_name\": \"Mburu\",\n  \"email\": \"johanambuguah@gmail.com\",\n  \"mobile_number\": \"+254723456789\",\n  \"org_id\": 1,\n  \"national_id\": \"12435678\",\n  \"gender\": \"female\",\n  \"dob\" : \"1995-01-01\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost/api/v1/register/user",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"api",
+										"v1",
 										"register",
 										"user"
 									]
@@ -582,274 +577,6 @@
 			]
 		},
 		{
-			"name": "hospital",
-			"item": [
-				{
-					"name": "admin",
-					"item": [
-						{
-							"name": "login",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"email\": \"jmburu.works@gmail.com\",\n  \"password\": \"FSvCWIbKtqYA\" \n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://localhost/api/v1/auth/login",
-									"protocol": "https",
-									"host": [
-										"localhost"
-									],
-									"path": [
-										"api",
-										"v1",
-										"auth",
-										"login"
-									]
-								},
-								"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/login \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"email\": \"admin@uwazi.com\",\n  \"password\": \"password\" \n}'"
-							},
-							"response": []
-						},
-						{
-							"name": "pre-authorise",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"pm.sendRequest({\r",
-											"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint\r",
-											"    method: 'POST',\r",
-											"    header: {\r",
-											"        'Content-Type': 'application/json',\r",
-											"    },\r",
-											"    body: {\r",
-											"        mode: 'raw',\r",
-											"        raw: JSON.stringify({\r",
-											"            \"email\": \"jmburu.works@gmail.com\",\r",
-											"            \"password\": \"FSvCWIbKtqYA\" \r",
-											"        })\r",
-											"    }\r",
-											"}, function (err, response) {\r",
-											"    if (err) {\r",
-											"        console.log('Error during login:', err);\r",
-											"    } else {\r",
-											"        // Extract the token from the response and store it in an environment variable\r",
-											"        const token = response.json().access_token; // Adjust based on your API response\r",
-											"        pm.environment.set('authToken', token);\r",
-											"    }\r",
-											"});\r",
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{authToken}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"customer_id\": 5\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://localhost/api/v1/insurance/pre-auth",
-									"protocol": "https",
-									"host": [
-										"localhost"
-									],
-									"path": [
-										"api",
-										"v1",
-										"insurance",
-										"pre-auth"
-									]
-								},
-								"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/login \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"email\": \"admin@uwazi.com\",\n  \"password\": \"password\" \n}'"
-							},
-							"response": []
-						},
-						{
-							"name": "create-claim",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"pm.sendRequest({",
-											"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint",
-											"    method: 'POST',",
-											"    header: {",
-											"        'Content-Type': 'application/json',",
-											"    },",
-											"    body: {",
-											"        mode: 'raw',",
-											"        raw: JSON.stringify({",
-											"            \"email\": \"jmburu.works@gmail.com\",",
-											"            \"password\": \"FSvCWIbKtqYA\" ",
-											"        })",
-											"    }",
-											"}, function (err, response) {",
-											"    if (err) {",
-											"        console.log('Error during login:', err);",
-											"    } else {",
-											"        // Extract the token from the response and store it in an environment variable",
-											"        const token = response.json().access_token; // Adjust based on your API response",
-											"        pm.environment.set('authToken', token);",
-											"    }",
-											"});",
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "Bearer {{authToken}}",
-										"type": "text"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"invoice_number\": \"INV8911\",\n    \"invoice_amount\": 15000,\n    \"treatment_id\": 1,\n    \"customer_id\": 5,\n    \"hospital_id\": 2,\n    \"insured_id\": 3,\n    \"claim_narration\": \"Emergency procedure due to an accident.\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://localhost/api/v1/insurance/claims",
-									"protocol": "https",
-									"host": [
-										"localhost"
-									],
-									"path": [
-										"api",
-										"v1",
-										"insurance",
-										"claims"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "get-hospital-claims",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"pm.sendRequest({\r",
-											"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint\r",
-											"    method: 'POST',\r",
-											"    header: {\r",
-											"        'Content-Type': 'application/json',\r",
-											"    },\r",
-											"    body: {\r",
-											"        mode: 'raw',\r",
-											"        raw: JSON.stringify({\r",
-											"            \"email\": \"jmburu.works@gmail.com\",\r",
-											"            \"password\": \"FSvCWIbKtqYA\" \r",
-											"        })\r",
-											"    }\r",
-											"}, function (err, response) {\r",
-											"    if (err) {\r",
-											"        console.log('Error during login:', err);\r",
-											"    } else {\r",
-											"        // Extract the token from the response and store it in an environment variable\r",
-											"        const token = response.json().access_token; // Adjust based on your API response\r",
-											"        pm.environment.set('authToken', token);\r",
-											"    }\r",
-											"});\r",
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "GET",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{authToken}}",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "https://localhost/api/v1/insurance/claims",
-									"protocol": "https",
-									"host": [
-										"localhost"
-									],
-									"path": [
-										"api",
-										"v1",
-										"insurance",
-										"claims"
-									]
-								},
-								"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/login \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"email\": \"admin@uwazi.com\",\n  \"password\": \"password\" \n}'"
-							},
-							"response": []
-						}
-					]
-				}
-			]
-		},
-		{
 			"name": "insurance",
 			"item": [
 				{
@@ -867,7 +594,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"email\": \"johanambuguah@gmail.com\", \n    \"password\": \"pScrYliAEUDS\"\n}",
+									"raw": "{\n    \"email\": \"johanambuguah@gmail.com\", \n    \"password\": \"sncuDtYBkEwR\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -888,81 +615,6 @@
 									]
 								},
 								"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/login \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"email\": \"admin@uwazi.com\",\n  \"password\": \"password\" \n}'"
-							},
-							"response": []
-						},
-						{
-							"name": "register-admin",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"pm.sendRequest({",
-											"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint",
-											"    method: 'POST',",
-											"    header: {",
-											"        'Content-Type': 'application/json',",
-											"    },",
-											"    body: {",
-											"        mode: 'raw',",
-											"        raw: JSON.stringify({",
-											"            email: 'johanambuguah@gmail.com', ",
-											"            password: 'pScrYliAEUDS'",
-											"        })",
-											"    }",
-											"}, function (err, response) {",
-											"    if (err) {",
-											"        console.log('Error during login:', err);",
-											"    } else {",
-											"        // Extract the token from the response and store it in an environment variable",
-											"        const token = response.json().access_token; // Adjust based on your API response",
-											"        pm.environment.set('authToken', token);",
-											"    }",
-											"});",
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "Bearer {{authToken}}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"user_name\": \"wendy\",\n  \"first_name\": \"Wendy\",\n  \"second_name\": \"\",\n  \"last_name\": \"Wangui\",\n  \"email\": \"johanambuguah@gmail.com\",\n  \"mobile_number\": \"+254723456987\",\n  \"org_id\": 3,\n  \"national_id\": \"12345678\",\n  \"gender\": \"female\",\n  \"dob\" : \"1995-01-01\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://localhost/api/v1/auth/register/user",
-									"protocol": "https",
-									"host": [
-										"localhost"
-									],
-									"path": [
-										"api",
-										"v1",
-										"auth",
-										"register",
-										"user"
-									]
-								},
-								"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/register/user \\\n  --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMzEzNzcxNCwianRpIjoiOTQ2ZmE0NDUtMGU2NC00MjFjLThjODMtOTlkZThiZTc4NzU4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IntcImlkXCI6IDEsIFwidXNlcl9uYW1lXCI6IFwiYWRtaW5cIiwgXCJmaXJzdF9uYW1lXCI6IFwiYWRtaW5cIiwgXCJsYXN0X25hbWVcIjogXCJhZG1pblwiLCBcImVtYWlsXCI6IFwiYWRtaW5AdXdhemkuY29tXCIsIFwib3JnX2lkXCI6IDEsIFwicm9sZV9pZFwiOiAyfSIsIm5iZiI6MTczMzEzNzcxNCwiZXhwIjoxNzMzMTM4NjE0fQ.Dvr2qA2eQrSrykzfKFY6Y2cgE8pUr96eixjSEg1hGWg' \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"user_name\": \"jmburu\",\n  \"first_name\": \"Johana\",\n  \"second_name\": \"Mbuguah\",\n  \"last_name\": \"Mburu\",\n  \"email\": \"johanambuguah@gmail.com\",\n  \"mobile_number\": \"+254723456789\",\n  \"org_id\": 1,\n  \"national_id\": \"12435678\",\n  \"gender\": \"female\",\n  \"dob\" : \"1995-01-01\"\n}'"
 							},
 							"response": []
 						},
@@ -983,7 +635,7 @@
 											"        mode: 'raw',",
 											"        raw: JSON.stringify({",
 											"            email: 'johanambuguah@gmail.com', ",
-											"            password: 'pScrYliAEUDS'",
+											"            password: 'sncuDtYBkEwR'",
 											"        })",
 											"    }",
 											"}, function (err, response) {",
@@ -1024,7 +676,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://localhost/api/v1/auth/register/user",
+									"raw": "https://localhost/api/v1/register/user",
 									"protocol": "https",
 									"host": [
 										"localhost"
@@ -1032,7 +684,80 @@
 									"path": [
 										"api",
 										"v1",
-										"auth",
+										"register",
+										"user"
+									]
+								},
+								"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/register/user \\\n  --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMzEzNzcxNCwianRpIjoiOTQ2ZmE0NDUtMGU2NC00MjFjLThjODMtOTlkZThiZTc4NzU4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IntcImlkXCI6IDEsIFwidXNlcl9uYW1lXCI6IFwiYWRtaW5cIiwgXCJmaXJzdF9uYW1lXCI6IFwiYWRtaW5cIiwgXCJsYXN0X25hbWVcIjogXCJhZG1pblwiLCBcImVtYWlsXCI6IFwiYWRtaW5AdXdhemkuY29tXCIsIFwib3JnX2lkXCI6IDEsIFwicm9sZV9pZFwiOiAyfSIsIm5iZiI6MTczMzEzNzcxNCwiZXhwIjoxNzMzMTM4NjE0fQ.Dvr2qA2eQrSrykzfKFY6Y2cgE8pUr96eixjSEg1hGWg' \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"user_name\": \"jmburu\",\n  \"first_name\": \"Johana\",\n  \"second_name\": \"Mbuguah\",\n  \"last_name\": \"Mburu\",\n  \"email\": \"johanambuguah@gmail.com\",\n  \"mobile_number\": \"+254723456789\",\n  \"org_id\": 1,\n  \"national_id\": \"12435678\",\n  \"gender\": \"female\",\n  \"dob\" : \"1995-01-01\"\n}'"
+							},
+							"response": []
+						},
+						{
+							"name": "register-admin",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({",
+											"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint",
+											"    method: 'POST',",
+											"    header: {",
+											"        'Content-Type': 'application/json',",
+											"    },",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw: JSON.stringify({",
+											"            email: 'johanambuguah@gmail.com', ",
+											"            password: 'tlBGFv6dF5Yx'",
+											"        })",
+											"    }",
+											"}, function (err, response) {",
+											"    if (err) {",
+											"        console.log('Error during login:', err);",
+											"    } else {",
+											"        // Extract the token from the response and store it in an environment variable",
+											"        const token = response.json().access_token; // Adjust based on your API response",
+											"        pm.environment.set('authToken', token);",
+											"    }",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{authToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"user_name\": \"wendy\",\n  \"first_name\": \"Wendy\",\n  \"second_name\": \"\",\n  \"last_name\": \"Wangui\",\n  \"email\": \"johanambuguah@gmail.com\",\n  \"mobile_number\": \"+254723456987\",\n  \"org_id\": 3,\n  \"national_id\": \"12345678\",\n  \"gender\": \"female\",\n  \"dob\" : \"1995-01-01\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost/api/v1/register/user",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"api",
+										"v1",
 										"register",
 										"user"
 									]
@@ -1058,7 +783,7 @@
 											"        mode: 'raw',\r",
 											"        raw: JSON.stringify({\r",
 											"            \"email\": \"johanambuguah@gmail.com\",\r",
-											"            \"password\": \"pScrYliAEUDS\" \r",
+											"            \"password\": \"sncuDtYBkEwR\" \r",
 											"        })\r",
 											"    }\r",
 											"}, function (err, response) {\r",
@@ -1127,7 +852,7 @@
 											"        mode: 'raw',\r",
 											"        raw: JSON.stringify({\r",
 											"            \"email\": \"johanambuguah@gmail.com\",\r",
-											"            \"password\": \"pScrYliAEUDS\" \r",
+											"            \"password\": \"sncuDtYBkEwR\" \r",
 											"        })\r",
 											"    }\r",
 											"}, function (err, response) {\r",
@@ -1164,7 +889,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"insurer_id\":3,\n    \"claim_id\": 2,\n    \"status\": \"approved\",\n    \"remarks\": \"Claim is valid!\"\n}",
+									"raw": "{\n    \"insurer_id\":3,\n    \"claim_id\": 1,\n    \"status\": \"approved\",\n    \"remarks\": \"Claim is valid!\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1205,7 +930,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"email\": \"eclectics.welfare@gmail.com\",\n  \"password\": \"VmTnYIGFl0A4\" \n}",
+									"raw": "{\n  \"email\": \"eclectics.welfare@gmail.com\",\n  \"password\": \"OTwCwtLeUEJ4\" \n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1246,7 +971,7 @@
 											"        mode: 'raw',\r",
 											"        raw: JSON.stringify({\r",
 											"            \"email\": \"eclectics.welfare@gmail.com\",\r",
-											"            \"password\": \"VmTnYIGFl0A4\" \r",
+											"            \"password\": \"OTwCwtLeUEJ4\" \r",
 											"        })\r",
 											"    }\r",
 											"}, function (err, response) {\r",
@@ -1315,7 +1040,7 @@
 											"        mode: 'raw',\r",
 											"        raw: JSON.stringify({\r",
 											"            \"email\": \"eclectics.welfare@gmail.com\",\r",
-											"            \"password\": \"VmTnYIGFl0A4\" \r",
+											"            \"password\": \"OTwCwtLeUEJ4\" \r",
 											"        })\r",
 											"    }\r",
 											"}, function (err, response) {\r",
@@ -1361,6 +1086,274 @@
 										"v1",
 										"insurance",
 										"policy-usage"
+									]
+								},
+								"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/login \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"email\": \"admin@uwazi.com\",\n  \"password\": \"password\" \n}'"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "hospital",
+			"item": [
+				{
+					"name": "admin",
+					"item": [
+						{
+							"name": "login",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"jmburu.works@gmail.com\",\n  \"password\": \"MQVoTtWdrkUr\" \n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost/api/v1/auth/login",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"login"
+									]
+								},
+								"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/login \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"email\": \"admin@uwazi.com\",\n  \"password\": \"password\" \n}'"
+							},
+							"response": []
+						},
+						{
+							"name": "pre-authorise",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({\r",
+											"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint\r",
+											"    method: 'POST',\r",
+											"    header: {\r",
+											"        'Content-Type': 'application/json',\r",
+											"    },\r",
+											"    body: {\r",
+											"        mode: 'raw',\r",
+											"        raw: JSON.stringify({\r",
+											"            \"email\": \"jmburu.works@gmail.com\",\r",
+											"            \"password\": \"MQVoTtWdrkUr\" \r",
+											"        })\r",
+											"    }\r",
+											"}, function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.log('Error during login:', err);\r",
+											"    } else {\r",
+											"        // Extract the token from the response and store it in an environment variable\r",
+											"        const token = response.json().access_token; // Adjust based on your API response\r",
+											"        pm.environment.set('authToken', token);\r",
+											"    }\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{authToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"customer_id\": 4\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost/api/v1/insurance/pre-auth",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"api",
+										"v1",
+										"insurance",
+										"pre-auth"
+									]
+								},
+								"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/login \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"email\": \"admin@uwazi.com\",\n  \"password\": \"password\" \n}'"
+							},
+							"response": []
+						},
+						{
+							"name": "create-claim",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({",
+											"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint",
+											"    method: 'POST',",
+											"    header: {",
+											"        'Content-Type': 'application/json',",
+											"    },",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw: JSON.stringify({",
+											"            \"email\": \"jmburu.works@gmail.com\",",
+											"            \"password\": \"MQVoTtWdrkUr\" ",
+											"        })",
+											"    }",
+											"}, function (err, response) {",
+											"    if (err) {",
+											"        console.log('Error during login:', err);",
+											"    } else {",
+											"        // Extract the token from the response and store it in an environment variable",
+											"        const token = response.json().access_token; // Adjust based on your API response",
+											"        pm.environment.set('authToken', token);",
+											"    }",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{authToken}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"invoice_number\": \"INV8911\",\n    \"invoice_amount\": 15000,\n    \"treatment_id\": 1,\n    \"customer_id\": 4,\n    \"hospital_id\": 2,\n    \"insured_id\": 3,\n    \"claim_narration\": \"Emergency procedure due to an accident.\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost/api/v1/insurance/claims",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"api",
+										"v1",
+										"insurance",
+										"claims"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-hospital-claims",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({\r",
+											"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint\r",
+											"    method: 'POST',\r",
+											"    header: {\r",
+											"        'Content-Type': 'application/json',\r",
+											"    },\r",
+											"    body: {\r",
+											"        mode: 'raw',\r",
+											"        raw: JSON.stringify({\r",
+											"            \"email\": \"jmburu.works@gmail.com\",\r",
+											"            \"password\": \"MQVoTtWdrkUr\" \r",
+											"        })\r",
+											"    }\r",
+											"}, function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.log('Error during login:', err);\r",
+											"    } else {\r",
+											"        // Extract the token from the response and store it in an environment variable\r",
+											"        const token = response.json().access_token; // Adjust based on your API response\r",
+											"        pm.environment.set('authToken', token);\r",
+											"    }\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{authToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://localhost/api/v1/insurance/claims",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"api",
+										"v1",
+										"insurance",
+										"claims"
 									]
 								},
 								"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/login \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"email\": \"admin@uwazi.com\",\n  \"password\": \"password\" \n}'"

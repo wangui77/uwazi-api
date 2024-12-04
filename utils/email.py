@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def send_password_email(to_email, username, password):
+def send_password_email(to_email, username, password, role, organisation):
     """
     Send the generated password to the user's email.
     """
@@ -29,7 +29,10 @@ def send_password_email(to_email, username, password):
                 <br>
                 <br>
                 <strong>Username:</strong> {username}<br>
-                <strong>Password:</strong><span style="font-size: 18px; color: blue;"> {password}</span>
+                <strong>Password:</strong><span style="font-size: 18px; color: blue;"> {password}</span><br>
+                <strong>Organisation:</strong> {organisation}<br>
+                <strong>Role:</strong> {role}<br>
+
             </p>
             <br>
             <p>Best regards,<br><strong>Uwazi Team</strong></p>
@@ -60,8 +63,3 @@ def send_password_email(to_email, username, password):
         print(
             f"Debug Info: username={username}, to_email={to_email}, password={password}, sender_email={sender_email}, sender_password={sender_password}", flush=True)
         return False
-
-
-# # Example usage
-# to_email = "user_email@example.com"
-# send_password_email(to_email, password)

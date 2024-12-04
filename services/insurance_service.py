@@ -70,7 +70,7 @@ class InsuranceService:
         # validate that the customer_id is a valid user
         user = User.query.get(customer_id)
         if not user:
-            return {"error": "Customer does not exist"}, 404
+            return False, {"error": "Customer does not exist"}, 404
 
         # Validate that the customer is an insurance customer
         customer_role_id = user.role_id
@@ -416,7 +416,7 @@ class InsuranceService:
                 })
             return claims_list, 200
         else:
-            return {"error": "No claims found"}, 404
+            return [], 200
 
     def update_claim(self, request):
 

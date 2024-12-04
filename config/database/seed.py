@@ -55,6 +55,8 @@ def seed():
         "created_by": default_admin_username,
         "approved_by": default_admin_username,
         "approved_at": datetime.utcnow(),
+        "status_code": "02",
+        "status_description": "Active"
     }
 
     organisation = Organisation.query.filter_by(
