@@ -135,6 +135,12 @@ def claims_routes(app):
         response, response_code = claims_service.create_claim(
             request)
         return response, response_code
+    
+    @app.route(create_route_with_prefix("/claims"), methods=["GET"])
+    def get_claims():
+        response, response_code = claims_service.get_claims(
+            request)
+        return response, response_code
 
 
 def register_routes(app):

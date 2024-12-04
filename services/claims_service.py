@@ -145,6 +145,9 @@ class ClaimsService:
             db.session.rollback()  # Rollback transaction on error
             print(f"Database error: {str(e)}", flush=True)
             return {"error": "An error occurred while saving the claim. Please try again later."}, 500
+        
+    def get_claims(request):
+        return { "message": "claims will go here" }, 200
 
 
 claims_service = ClaimsService()
