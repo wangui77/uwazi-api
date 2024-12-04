@@ -196,6 +196,12 @@ def insurance_service_routes(app):
             request)
         return response, response_code
 
+    @app.route(create_route_with_prefix("/insurance/policy-usage"), methods=["GET"])
+    def get_policy_usage():
+        response, response_code = insurance_service.get_policy_usage(
+            request)
+        return response, response_code
+
     @app.route(create_route_with_prefix("/insurance/claims"), methods=["POST"])
     def create_claim():
         response, response_code = insurance_service.create_claim(

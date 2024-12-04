@@ -48,7 +48,7 @@ class InsuranceService:
 
     # ==================================
     #
-    #  Pre-authorisation
+    #  Policy
     #
     # =================================
     def can_pre_authorise_claims(self, token):
@@ -106,6 +106,9 @@ class InsuranceService:
         # Return the policy details
         response = {
             "policy_number": policy.policy_number,
+            "premium_amount": policy.premium_amount,
+            "policy_start_date": policy.policy_start_date,
+            "policy_end_date": policy.policy_end_date,
             "remaining_limit": policy.remaining_limit,
             "insurer_name": customer_organisation.name,
             "is_expired": is_expired,
@@ -132,10 +135,24 @@ class InsuranceService:
         if not can_pre_authorise_claims:
             return {'error': 'Only a hospital admin can pre-authorise claims'}, 401
 
-        print(f"User data: {user_data}", flush=True)
-
         # get the policy details
         _is_valid, response, status_code = self.get_policy_details(customer_id)
+
+        return response, status_code
+
+    def get_policy_usage(self, request):
+        # Ensure the user is logged in
+        token = jwt_service.get_token_from_request(request)
+        if not token:
+            return {"error": "Unauthorized", "message": "Missing token"}, 401
+
+        claims = jwt_service.decode_identity(token)
+        customer = User.query.get(claims["id"])
+        if not customer.id:
+            return {"error": "Missing customer_id"}, 400
+
+        # get the policy details
+        _is_valid, response, status_code = self.get_policy_details(customer.id)
 
         return response, status_code
 

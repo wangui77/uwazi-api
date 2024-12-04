@@ -1230,7 +1230,7 @@
 							"response": []
 						},
 						{
-							"name": "get-customer-claims",
+							"name": "customer-claims",
 							"event": [
 								{
 									"listen": "prerequest",
@@ -1292,6 +1292,75 @@
 										"v1",
 										"insurance",
 										"claims"
+									]
+								},
+								"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/login \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"email\": \"admin@uwazi.com\",\n  \"password\": \"password\" \n}'"
+							},
+							"response": []
+						},
+						{
+							"name": "policy-usage",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({\r",
+											"    url: 'https://localhost/api/v1/auth/login', // Replace with your auth endpoint\r",
+											"    method: 'POST',\r",
+											"    header: {\r",
+											"        'Content-Type': 'application/json',\r",
+											"    },\r",
+											"    body: {\r",
+											"        mode: 'raw',\r",
+											"        raw: JSON.stringify({\r",
+											"            \"email\": \"eclectics.welfare@gmail.com\",\r",
+											"            \"password\": \"VmTnYIGFl0A4\" \r",
+											"        })\r",
+											"    }\r",
+											"}, function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.log('Error during login:', err);\r",
+											"    } else {\r",
+											"        // Extract the token from the response and store it in an environment variable\r",
+											"        const token = response.json().access_token; // Adjust based on your API response\r",
+											"        pm.environment.set('authToken', token);\r",
+											"    }\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{authToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://localhost/api/v1/insurance/policy-usage",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"api",
+										"v1",
+										"insurance",
+										"policy-usage"
 									]
 								},
 								"description": "Generated from cURL: curl --request POST \\\n  --url https://localhost/auth/login \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"email\": \"admin@uwazi.com\",\n  \"password\": \"password\" \n}'"
