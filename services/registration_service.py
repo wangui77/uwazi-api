@@ -1,15 +1,16 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash
 
 from models.organisation import Organisation
+from models.policy import Policy
 from models.role import Role
 from models.user import User
 from services.db_service import db
 from services.jwt_service import jwt_service
-from utils.auth import generate_strong_password
+from utils.auth import generate_policy_number, generate_strong_password
 from utils.email import send_password_email
 
 
@@ -33,6 +34,9 @@ class RegistrationService:
             "gender",
             "dob",
             "mobile_number",
+        ]
+        self.required_insurance_customer_fields = [
+            "premium_amount",
         ]
         self.valid_org_types = ["hospital", "insurance"]
         self.valid_hospital_categories = ["public", "private"]
@@ -62,7 +66,7 @@ class RegistrationService:
 
         admin, admin_data = self.get_admin_claims_from_token(token)
         if not admin:
-            return {"error": "Unauthorized"}, 401
+            return False, {"error": "Unauthorized"}, 401
 
         # Validate the organisation exists
         request_payload_org = Organisation.query.filter_by(
@@ -72,11 +76,38 @@ class RegistrationService:
 
         # only super admins can register other super admins
         if request_payload_org.type == "provider" and not admin == "super_admin":
-            return {"error": "Only super admins can register other super admins"}, 403
+            return False, {"error": "Only super admins can register other super admins"}, 403
 
         # admins can only register admins in their own organisation
         if request_payload_org.id != admin_data["org_id"] and admin == "admin":
             return False, {"error": "You can only register users in your own organisation"}, 403
+
+        return True, admin_data, None
+
+    def can_create_insurance_customer(self, request, data):
+        # Validate admin permissions
+        # Get admin details
+        token = jwt_service.get_token_from_request(request)
+        if not token:
+            return False, {"error": "Unauthorized", "message": "Missing token"}, 401
+
+        admin, admin_data = self.get_admin_claims_from_token(token)
+        if not admin:
+            return False, {"error": "Unauthorized"}, 401
+
+        # Validate the organisation exists
+        request_payload_org = Organisation.query.filter_by(
+            id=data["org_id"]).first()
+        if not request_payload_org:
+            return False, {"error": f"Organisation with id {data['org_id']} not found"}, 404
+
+        # only admins can register customers
+        if request_payload_org.type == "insurance" and not admin == "admin":
+            return False, {"error": "Only insurance admins can register insurance customers"}, 403
+
+        # admins can only register customers in their own organisation
+        if request_payload_org.id != admin_data["org_id"] and admin == "admin":
+            return False, {"error": "You can only register customers in your own organisation"}, 403
 
         return True, admin_data, None
 
@@ -165,6 +196,30 @@ class RegistrationService:
 
         return True, None, None
 
+    def validate_insurance_customer_payload(self, data):
+        # Check for missing fields
+        missing_fields = [
+            field for field in self.required_insurance_customer_fields if not data.get(field)
+        ]
+        if missing_fields:
+            return False, {"error": f"Missing required fields: {', '.join(missing_fields)}"}, 400
+
+        # Validate premium_amount is numeric and greater than 0
+        try:
+            premium_amount = float(data.get("premium_amount", 0))
+            if premium_amount <= 0:
+                raise ValueError
+        except (ValueError, TypeError):
+            return False, {"error": "The premium amount must be a numeric value greater than 0"}, 400
+
+        # Validate the organisation exists
+        organisation = self.get_organisation(data.get("org_id"))
+        if not organisation:
+            return False, {"error": f"Organisation with ID {data.get('org_id')} not found"}, 404
+
+        # All validations passed
+        return True, None, None
+
     # Registration functions
     def register_organisation(self, request):
         token = jwt_service.get_token_from_request(request)
@@ -246,6 +301,15 @@ class RegistrationService:
         if not is_payload_valid:
             return payload_error, payload_error_code
 
+        # Validate if the registration is for an insurance customer
+        is_insurance_customer = data.get("type") == "insurance_customer"
+        if is_insurance_customer:
+            # Validate the insurance customer payload
+            is_payload_valid, payload_error, payload_error_code = self.validate_insurance_customer_payload(
+                data)
+            if not is_payload_valid:
+                return payload_error, payload_error_code
+
         # Validate if the current user can create a user
         can_create, admin_data_or_error, error_code = self.can_create_user(
             request, data)
@@ -321,6 +385,121 @@ class RegistrationService:
             # Log the error for debugging purposes
             print(f"Database error: {str(e)}", flush=True)
             return {"error": "An error occurred while creating the user. Please try again later."}, 500
+
+    def register_insurance_customer(self, request):
+
+        data = request.json
+
+        # Validate the request payload
+        is_user_payload_valid, user_payload_error, user_payload_error_code = self.validate_user_payload(
+            data)
+        is_insurance_customer_payload_valid, insurance_customer_payload_error, insurance_customer_payload_error_code = self.validate_insurance_customer_payload(
+            data)
+
+        if not is_user_payload_valid:
+            return user_payload_error, user_payload_error_code
+
+        if not is_insurance_customer_payload_valid:
+            return insurance_customer_payload_error, insurance_customer_payload_error_code
+
+        # Validate if the current user can create a user
+        can_create, admin_data_or_error, error_code = self.can_create_insurance_customer(
+            request, data)
+        if not can_create:
+            return admin_data_or_error, error_code
+
+        # Create the user
+        # Determine the role based on the organisation type
+        organisation = self.get_organisation(data["org_id"])
+        role_name = "user"
+
+        role_id = Role.query.filter_by(role_code=role_name).first().id
+        random_password = generate_strong_password()
+
+        insurance_customer = User(
+            user_name=data["user_name"],
+            first_name=data["first_name"],
+            second_name=data["second_name"] or None,
+            last_name=data["last_name"],
+            national_id=data["national_id"],
+            email=data["email"],
+            gender=data["gender"],
+            dob=data["dob"],
+            mobile_number=data["mobile_number"],
+            password_hash=generate_password_hash(random_password),
+            role_id=role_id,
+            org_id=data["org_id"],
+            created_by=admin_data_or_error["user_name"],
+            approved_by=admin_data_or_error["user_name"],
+            status_code="01",
+            status_description="Active",
+        )
+
+        try:
+            db.session.add(insurance_customer)
+            db.session.commit()
+
+            print(f"New user created: {insurance_customer.user_name}")
+            print(f"Password: {random_password}")
+
+            # Create the insurance customer Policy
+            duration = timedelta(days=365)  # 1 year
+            policy_start_date = datetime.utcnow()
+            policy_end_date = policy_start_date + duration
+            policy_number = generate_policy_number()
+
+            new_policy = Policy(
+                policy_number=policy_number,
+                policy_start_date=policy_start_date.date(),
+                policy_end_date=policy_end_date.date(),
+                premium_amount=data["premium_amount"],
+                remaining_limit=data["premium_amount"],
+                user_id=insurance_customer.id,
+            )
+
+            # Create the insurance customer policy
+            db.session.add(new_policy)
+            db.session.commit()
+
+            # Send the password to the user's email
+            email_sent_successfully = send_password_email(
+                insurance_customer.email,
+                insurance_customer.user_name,
+                random_password
+            )
+
+            return {
+                "message": "User created successfully",
+                "data": {
+                    "id": insurance_customer.id,
+                    "user_name": insurance_customer.user_name,
+                    "first_name": insurance_customer.first_name,
+                    "second_name": insurance_customer.second_name,
+                    "last_name": insurance_customer.last_name,
+                    "national_id": insurance_customer.national_id,
+                    "email": insurance_customer.email,
+                    "gender": insurance_customer.gender,
+                    "dob": insurance_customer.dob,
+                    "mobile_number": insurance_customer.mobile_number,
+                    "organisation": organisation.name,
+                    "role": role_name,
+                    "created_by": admin_data_or_error["user_name"],
+                    "status": insurance_customer.status_description,
+                    "email_sent_successfully": email_sent_successfully,
+
+                    "policy_number": new_policy.policy_number,
+                    "policy_start_date": new_policy.policy_start_date,
+                    "policy_end_date": new_policy.policy_end_date,
+                    "premium_amount": new_policy.premium_amount,
+                    "remaining_limit": new_policy.remaining_limit,
+                }
+            }, 201
+
+        except SQLAlchemyError as e:
+            db.session.rollback()  # Rollback the transaction to maintain consistency
+            # Log the error for debugging purposes
+            print(f"Database error: {str(e)}", flush=True)
+            return {"error": "An error occurred while creating the insurance customer. Please try again later."}, 500
 
 
 registration_service = RegistrationService()

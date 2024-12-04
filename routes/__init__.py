@@ -1,6 +1,8 @@
 from flask import jsonify, request
 from flask_jwt_extended import set_access_cookies, set_refresh_cookies
 
+from models.organisation import Organisation
+from models.role import Role
 from services.claims_service import claims_service
 from services.jwt_service import jwt_service
 from services.registration_service import registration_service
@@ -15,6 +17,30 @@ def general_routes(app):
     @app.route(create_route_with_prefix("/health"), methods=["GET"])
     def health():
         return {"status": "healthy"}, 200
+
+    @app.route(create_route_with_prefix("/pre-login"), methods=["GET"])
+    def meta_data():
+        # We require all organisations and their id's
+        organisations = Organisation.query.all()
+
+        if organisations:
+            org_list = []
+            for org in organisations:
+
+                org_list.append({
+                    "id": org.id,
+                    "name": org.name,
+                    "type": org.type,
+                    "code": org.code,
+                    "email_address": org.email_address,
+                    "status": org.status_description,
+                })
+
+            return {
+                "organisations": org_list
+            }, 200
+        else:
+            return {}, 200
 
 
 def auth_routes(app):
@@ -57,13 +83,31 @@ def auth_routes(app):
         )
 
         # Set the tokens in the response cookies and response body
-        response = jsonify({
-            "access_token": access_token,
-            "refresh_token": refresh_token
-        })
+        organisation = Organisation.query.get(user.org_id)
+        role_code = Role.query.get(user.role_id).role_code
 
-        set_access_cookies(response, access_token)
-        set_refresh_cookies(response, refresh_token)
+        response = {
+            "user": {
+                "id": user.id,
+                "user_name": user.user_name,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "email": user.email,
+                "organisation": {
+                    "id": organisation.id,
+                    "name": organisation.name,
+                    "type": organisation.type,
+                    "role": role_code,
+                },
+            },
+            "tokens": {
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+            },
+        }
+
+        set_access_cookies(jsonify(response), access_token)
+        set_refresh_cookies(jsonify(response), refresh_token)
 
         return response, 200
 
@@ -108,13 +152,22 @@ def auth_routes(app):
     @app.route(create_route_with_prefix("/auth/register/<registration_type>"), methods=["POST"])
     def register(registration_type):
         registration_type = registration_type.lower()
+        data = request.json
 
         if registration_type == "organisation":
             response, response_code = registration_service.register_organisation(
                 request)
+
         elif registration_type == "user":
-            response, response_code = registration_service.register_user(
-                request)
+            is_insurance_customer = data.get("type") == "insurance_customer"
+
+            if is_insurance_customer:
+                response, response_code = registration_service.register_insurance_customer(
+                    request)
+            else:
+                response, response_code = registration_service.register_user(
+                    request)
+
         else:
             return jsonify({"error": f"Invalid registration type: {registration_type}"}), 400
 
@@ -131,14 +184,20 @@ def treatment_routes(app):
 
 def claims_routes(app):
     @app.route(create_route_with_prefix("/claims"), methods=["POST"])
-    def claim():
+    def create_claim():
         response, response_code = claims_service.create_claim(
             request)
         return response, response_code
-    
+
     @app.route(create_route_with_prefix("/claims"), methods=["GET"])
     def get_claims():
         response, response_code = claims_service.get_claims(
+            request)
+        return response, response_code
+
+    @app.route(create_route_with_prefix("/claims"), methods=["PATCH"])
+    def update_claim():
+        response, response_code = claims_service.update_claim(
             request)
         return response, response_code
 

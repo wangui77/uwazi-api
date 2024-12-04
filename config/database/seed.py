@@ -3,11 +3,12 @@ import uuid
 from datetime import datetime
 
 from dotenv import load_dotenv
+from werkzeug.security import generate_password_hash
+
 from models.organisation import Organisation
 from models.role import Role
 from models.user import User
 from services.db_service import db
-from werkzeug.security import generate_password_hash
 
 load_dotenv()
 
@@ -30,6 +31,12 @@ def seed():
         {
             "role_code": "super_admin",
             "role_description": "Super Administrator with all privileges",
+            "created_by": "system",
+            "created_at": datetime.utcnow(),
+        },
+        {
+            "role_code": "user",
+            "role_description": "User with limited privileges",
             "created_by": "system",
             "created_at": datetime.utcnow(),
         },
