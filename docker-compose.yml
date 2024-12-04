@@ -5,6 +5,8 @@ services:
     ports:
       - "443:443"
       - "80:80"
+      - "8443:8443"
+      - "8000:8000"
     volumes:
       - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf  # Nginx configuration
       - ./config/nginx/certs:/etc/nginx/certs:ro         # SSL certificates (read-only)
@@ -36,6 +38,13 @@ services:
       - "${POSTGRES_PORT}:5432"  # Default PostgreSQL port defined in .env file
     volumes:
       - database-data:/var/lib/postgresql/data  # Persistent storage for PostgreSQL data. This will persist data even if container is deleted.
+
+  docs:
+    build:
+      context: ./docs/website
+    container_name: docs
+    ports:
+      - "4000:4000"
 
 volumes:
   database-data:

@@ -168,3 +168,4 @@ cython_debug/
 config/nginx/certs/*
 !config/nginx/certs/
 !config/nginx/certs/.keep
+node_modules/

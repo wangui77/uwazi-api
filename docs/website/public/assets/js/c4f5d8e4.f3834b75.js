@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocusaurus_template_openapi_docs=self.webpackChunkdocusaurus_template_openapi_docs||[]).push([[634],{30192:(e,u,s)=>{s.r(u),s.d(u,{default:()=>t});var a=s(56347),o=(s(96540),s(74848));function t(){return(0,o.jsx)(a.rd,{to:"/docs/uwazi/overview"})}}}]);
