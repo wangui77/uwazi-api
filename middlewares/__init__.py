@@ -23,9 +23,10 @@ def middlewares(app):
     def auth_check_middleware():
         # Skip middleware for specific public routes
         public_endpoints = [
-            "/api/v1/auth/login",
             "/api/v1/health",
+            "/api/v1/docs-url",
             "/api/v1/pre-login",
+            "/api/v1/auth/login",
         ]
         if request.path in public_endpoints:
             return

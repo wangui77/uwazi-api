@@ -18,6 +18,10 @@ def general_routes(app):
     def health():
         return {"status": "healthy"}, 200
 
+    @app.route(create_route_with_prefix("/docs-url"), methods=["GET"])
+    def docs():
+        return "Click here to access the uwazi api docs -> https://localhost:8443", 200
+
     @app.route(create_route_with_prefix("/pre-login"), methods=["GET"])
     def meta_data():
         # We require all organisations and their id's

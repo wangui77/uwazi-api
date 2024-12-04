@@ -1405,6 +1405,27 @@
 				"description": "Generated from cURL: curl --request GET \\\n  --url https://localhost/health"
 			},
 			"response": []
+		},
+		{
+			"name": "docs-url",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost/api/v1/docs-url",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"v1",
+						"docs-url"
+					]
+				},
+				"description": "Generated from cURL: curl --request GET \\\n  --url https://localhost/health"
+			},
+			"response": []
 		}
 	]
 }
