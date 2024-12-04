@@ -101,14 +101,6 @@ The Uwazi API empowers insurance providers by streamlining the verification of h
 3. **Copy Certificates:**
    - Copy the generated `localhost-key.pem` and `localhost.pem` files to the `config/nginx/certs` directory.
 
-4. **Test HTTPS Locally:**
-   - Use [https://localhost/api/v1/health](https://localhost/api/v1/health) to test your application without specifying a port.
-   This should return the following response:
-   ```json
-   {
-      "status": "healthy"
-   }
-   ```
 
 ---
 
