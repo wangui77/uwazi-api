@@ -53,7 +53,7 @@ class App:
 
     def get(self):
         environment = os.getenv("FLASK_ENV", "production")
-        flask_port = int(os.getenv("FLASK_PORT", 8080))
+        flask_port = int(os.getenv("FLASK_PORT", 8080)) #use render's port env variable
         debug_mode = environment == "development"
 
         return self.app, debug_mode, flask_port
