@@ -30,3 +30,5 @@ build/
 # OS-specific files
 .DS_Store
 Thumbs.db
+# delay file
+wait-for-it-it.sh
