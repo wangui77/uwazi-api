@@ -1,5 +1,6 @@
 version: '3'
 services:
+
   nginx:
     image: nginx:latest
     container_name: nginx
@@ -15,12 +16,14 @@ services:
     depends_on:
       - api
 
+
+
   api:
     build:
       context: .
     container_name: api
-    env_file:
-      - .env
+    environment:
+      - DATABASE_URL=postgresql://uwazi_admin:Today123%!@database:5432/uwazi_db
     ports:
       - "${FLASK_PORT}:${FLASK_PORT}"
     volumes:
@@ -28,6 +31,8 @@ services:
     depends_on:
       - database
     command: ["wait-for-it", "database:5432", "--timeout=60", "--", "flask", "run", "--host=0.0.0.0", "--port=${FLASK_PORT}", "--reload"]
+
+
 
   database:
     image: postgres:latest
