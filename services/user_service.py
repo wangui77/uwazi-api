@@ -25,6 +25,6 @@ class UserService:
             return None
         except Exception as e:
             raise Exception(f"Failed to verify user: {str(e)}")
-
+        
 
 user_service = UserService()

@@ -1,4 +1,5 @@
-FROM python:3.9-slim
+#base image of the container
+FROM python:3.9-slim 
 
 # Set the working directory
 WORKDIR /app
@@ -12,7 +13,7 @@ RUN chmod +x /usr/local/bin/wait-for-it
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
+# Copy from cd-uwazi-api to container
 COPY . .
 
 # Expose the port Flask runs on

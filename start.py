@@ -24,7 +24,9 @@ class App:
         self.app.config.from_object(Config)
 
         # Setup API security
-        CORS(self.app)
+    
+        CORS(self.app, resources={r"/api/*": {"origins": ["http://localhost:4200", "  https://a758-41-90-101-26.ngrok-free.app "]}})
+
 
         # Setup JWT management
         self.app.config["JWT_SECRET_KEY"] = os.getenv(
