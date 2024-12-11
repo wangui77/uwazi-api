@@ -23,11 +23,18 @@ def seed():
     # Seed roles
     roles = [
         {
-            "role_code": "admin",
+            "role_code": " hospital_admin",
             "role_description": "Administrator with general privileges",
             "created_by": "system",
             "created_at": datetime.utcnow(),
         },
+        {
+            "role_code": " insurance_admin",
+            "role_description": "Administrator with general privileges",
+            "created_by": "system",
+            "created_at": datetime.utcnow(),
+        },
+        
         {
             "role_code": "super_admin",
             "role_description": "Super Administrator with all privileges",
