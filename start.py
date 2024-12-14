@@ -25,7 +25,7 @@ class App:
 
         # Setup API security
     
-        CORS(self.app, resources={r"/api/*": {"origins": ["http://localhost:4200", "  https://a758-41-90-101-26.ngrok-free.app "]}})
+        CORS(self.app, resources={r"/api/*": {"origins": ["http://localhost:4200", "https://uwazi-apirr.onrender.com"]}})
 
 
         # Setup JWT management

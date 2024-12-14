@@ -11,12 +11,12 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Database Configuration
-    DB_HOST = os.getenv("POSTGRES_HOST", "dpg-ctchamq3esus73bfulkg-a")
+    DB_HOST = os.getenv("POSTGRES_HOST", "dpg-ctemeil2ng1s738cltug-a")
     DB_PORT = os.getenv("POSTGRES_PORT", "5432")
-    DB_NAME = os.getenv("POSTGRES_DB", "uwazi_db_i22l")
-    DB_USER = os.getenv("POSTGRES_USER", "uwazi_db_i22l_user")
+    DB_NAME = os.getenv("POSTGRES_DB", "uwazidb_erf2")
+    DB_USER = os.getenv("POSTGRES_USER", "uwazidb_erf2_user")
     DB_PASSWORD = os.getenv(
-        "POSTGRES_PASSWORD", "UW8B72dCqLf7j3wyCmXcZ1nNiW66SIcG"
+        "POSTGRES_PASSWORD", "ZJbpfERBxgQnNmSDRANzpOXMtuPPoGgT"
     )
 
     @staticmethod
