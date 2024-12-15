@@ -1,9 +1,9 @@
-import os
-import uuid
-from datetime import datetime
+import os  #for accessing .env variables
+import uuid  #for generating unique identifers <for organisation>
+from datetime import datetime #handling whenrole/user was created
 
-from dotenv import load_dotenv
-from werkzeug.security import generate_password_hash
+from dotenv import load_dotenv  #loading .env variables into the program
+from werkzeug.security import generate_password_hash   #hashing passwords
 
 from models.organisation import Organisation
 from models.role import Role

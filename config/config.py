@@ -21,7 +21,5 @@ class Config:
 
     @staticmethod
     def get_db_uri():
-        # Build the database URI manually using environment variables
         default_uri = f"postgresql://{Config.DB_USER}:{Config.DB_PASSWORD}@{Config.DB_HOST}:{Config.DB_PORT}/{Config.DB_NAME}"
-        # Use DATABASE_URL if set, otherwise fallback to the manually built URI
         return os.getenv("DATABASE_URL", default_uri)
