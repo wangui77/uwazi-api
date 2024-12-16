@@ -11,3 +11,6 @@ class Role(db.Model):
     role_description = db.Column(db.String(255))
     created_by = db.Column(db.String(100))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+def __repr__(self):
+ return f"<Role {self.role_code}>"
