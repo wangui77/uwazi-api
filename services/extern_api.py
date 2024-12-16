@@ -46,7 +46,8 @@ def main():
     # Test POST request
     url_post = 'https://uwazitek-2.onrender.com/process-invoice'
     data = {
-        "invoice_text":"jhefvjhbreiusdgtcvkejbdckdjbcghkjdshbc"
+        "invoice_text":"text",
+        "invoice_file": "pdf"
     }
     print("Testing POST request...")
     response = post(url_post, data)
