@@ -322,13 +322,17 @@ class RegistrationService:
         organisation = self.get_organisation(data["org_id"])
         if organisation.type == "provider":
             role_name = "super_admin"
-        else:
+        else :
             role_name = "admin"
 
-        role_id = Role.query.filter_by(role_code=role_name).first().id
+        role= Role.query.filter_by(role_code=role_name).first()
+        if role is None:
         
+         return {"error": f"Role {role_name} not found in the database"}, 400
+        role_id =role.id
     
-
+        
+        
         random_password = generate_strong_password()
 
         new_user = User(
@@ -418,7 +422,7 @@ class RegistrationService:
         # Create the user
         # Determine the role based on the organisation type
         organisation = self.get_organisation(data["org_id"])
-        role_name = "admin"
+        role_name = "user"
 
         role = Role.query.filter_by(role_code=role_name).first()
         if role is None:
