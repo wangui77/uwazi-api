@@ -3,7 +3,7 @@ from datetime import datetime
 import requests
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash
-from extern_api import get, post
+#from extern_api import get, post
 from models.claim import Claim
 from models.organisation import Organisation
 from models.policy import Policy
@@ -226,7 +226,7 @@ class InsuranceService:
 
         invoice_number = data.get("invoice_number")
         invoice_amount = data.get("invoice_amount")
-        #treatment_id = data.get("treatment_id")
+        treatment_id = data.get("treatment_id")
         customer_id = data.get("customer_id")
         hospital_id = data.get("hospital_id")
         insured_id = data.get("insured_id")
@@ -274,7 +274,7 @@ class InsuranceService:
             "invoice_text": invoice_number
         }
 
-        res = post("",data)
+        #res = post("",data)
         # Logic to check fraud
         # Step 1: get the pdf
         # Step 2: call prudence's api

@@ -325,13 +325,8 @@ class RegistrationService:
         else:
             role_name = "admin"
 
-        #role_id = Role.query.filter_by(role_code=role_name).first().id
-        role = Role.query.filter_by(role_code=role_name).first()
-
-        if not role:
-         return {
-        "error": f"Role with role_code '{role_name}' not found." }, 404
-         role_id = role.id  
+        role_id = Role.query.filter_by(role_code=role_name).first().id
+        
     
 
         random_password = generate_strong_password()
@@ -425,7 +420,13 @@ class RegistrationService:
         organisation = self.get_organisation(data["org_id"])
         role_name = "user"
 
-        role_id = Role.query.filter_by(role_code=role_name).first().id
+        role = Role.query.filter_by(role_code=role_name).first()
+        if role is None:
+        # Handle the case where the role does not exist
+         raise ValueError(f"Role with role_code '{role_name}' not found.")
+
+        role_id = role.id
+
         random_password = generate_strong_password()
 
         insurance_customer = User(
