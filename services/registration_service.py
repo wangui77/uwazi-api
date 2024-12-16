@@ -72,6 +72,7 @@ class RegistrationService:
         request_payload_org = Organisation.query.filter_by(
             id=data["org_id"]).first()
         if not request_payload_org:
+
             return False, {"error": f"Organisation with id {data['org_id']} not found"}, 404
 
         # only super admins can register other super admins
@@ -324,7 +325,15 @@ class RegistrationService:
         else:
             role_name = "admin"
 
-        role_id = Role.query.filter_by(role_code=role_name).first().id
+        #role_id = Role.query.filter_by(role_code=role_name).first().id
+        role = Role.query.filter_by(role_code=role_name).first()
+
+        if not role:
+         return {
+        "error": f"Role with role_code '{role_name}' not found." }, 404
+         role_id = role.id  
+    
+
         random_password = generate_strong_password()
 
         new_user = User(

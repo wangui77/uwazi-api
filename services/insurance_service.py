@@ -1,9 +1,9 @@
 import uuid
 from datetime import datetime
-
+import requests
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash
-
+from extern_api import get, post
 from models.claim import Claim
 from models.organisation import Organisation
 from models.policy import Policy
@@ -170,10 +170,10 @@ class InsuranceService:
         user = User.query.get(claims["id"])
 
         if not organisation or organisation.type != "hospital":
-            return False, {"error": "You must belong to a hospital organisation to create a claim"}
+            return False, {"error": "You must belong to a hospital organisation to upload a claim"}
 
         if not role or role.role_code != "admin":
-            return False, {"error": "You must be an admin to create a claim"}
+            return False, {"error": "You must be an admin to upload a claim"}
 
         return True, {"user_name": user.user_name, "org_id": organisation.id, "hospital_category": organisation.hospital_category}
 
@@ -226,12 +226,13 @@ class InsuranceService:
 
         invoice_number = data.get("invoice_number")
         invoice_amount = data.get("invoice_amount")
-        treatment_id = data.get("treatment_id")
+        #treatment_id = data.get("treatment_id")
         customer_id = data.get("customer_id")
         hospital_id = data.get("hospital_id")
         insured_id = data.get("insured_id")
         claim_narration = data.get("claim_narration", "")
-
+        claims_pdf = data.get("pdf","")
+         
         # Validate required fields
         missing_fields = [
             field for field in self.required_claims_fields if data.get(field) in [None]
@@ -267,7 +268,18 @@ class InsuranceService:
         remaining_limit = policy_details_or_error["remaining_limit"]
         if invoice_amount > remaining_limit:
             return {"error": "Insufficient funds to pay the claim"}, 400
+        #----------------------------------------------------------------------------#
+        data = {
+            "invoice_file": claims_pdf,
+            "invoice_text": invoice_number
+        }
 
+        res = post("",data)
+        # Logic to check fraud
+        # Step 1: get the pdf
+        # Step 2: call prudence's api
+        # step 3: get response
+        #----------------------------------------------------------------------------#
         # Check if the claim already exists
         existing_claim = Claim.query.filter_by(
             invoice_number=invoice_number).first()
