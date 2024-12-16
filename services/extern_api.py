@@ -43,7 +43,7 @@ def get(url, data=None):
 
 
 def main():
-    # Test POST request
+    # Test POST invoice
     url_post = 'https://uwazitek-2.onrender.com/process-invoice'
     data = {
         "invoice_text":"text",
@@ -53,12 +53,14 @@ def main():
     response = post(url_post, data)
     print("POST Response:", response)
 
-    # Test GET requesthttps://uwazitek-2.onrender.com/generate-report
-    url_get = ''
-    
+    # Test get Report
+    url_get = 'https://uwazitek-2.onrender.com/generate-report'
+
     print("\nTesting GET request...")
     response = get(url_get)
     print("GET Response:", response)
+    # hospital invoice status
+    url_get ='https://uwazitek-2.onrender.com/api/rejection-reasons'
 
 
 if __name__ == "__main__":
