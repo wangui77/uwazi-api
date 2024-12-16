@@ -418,7 +418,7 @@ class RegistrationService:
         # Create the user
         # Determine the role based on the organisation type
         organisation = self.get_organisation(data["org_id"])
-        role_name = "user"
+        role_name = "admin"
 
         role = Role.query.filter_by(role_code=role_name).first()
         if role is None:
